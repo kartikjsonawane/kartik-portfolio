@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartik Sonawane — AI/ML Engineer & Full-Stack Developer</title>
+<style>
+:root[data-theme="dark"] {
+  --bg:        #0a0a0a;
+  --bg2:       #111111;
+  --bg3:       #171717;
+  --bg4:       #1a1a1a;
+  --bg5:       #1f1f1f;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.12);
+  --text:      #ffffff;
+  --text2:     #e5e5e5;
+  --text3:     #a3a3a3;
+  --text4:     #6b7280;
+  --text5:     #404040;
+  --accent:    #10b981;
+  --accent2:   #34d399;
+  --accent-bg: rgba(16,185,129,.1);
+  --accent-b:  rgba(16,185,129,.22);
+  --nav-bg:    rgba(10,10,10,.92);
+  --card-hover-shadow: 0 8px 32px rgba(0,0,0,.5);
+  --glow1: rgba(16,185,129,.04);
+  --glow2: rgba(59,130,246,.03);
+}
+:root[data-theme="light"] {
+  --bg:        #f8fafc;
+  --bg2:       #ffffff;
+  --bg3:       #f1f5f9;
+  --bg4:       #e2e8f0;
+  --bg5:       #f8fafc;
+  --border:    rgba(0,0,0,.08);
+  --border2:   rgba(0,0,0,.12);
+  --text:      #0f172a;
+  --text2:     #1e293b;
+  --text3:     #475569;
+  --text4:     #94a3b8;
+  --text5:     #cbd5e1;
+  --accent:    #059669;
+  --accent2:   #10b981;
+  --accent-bg: rgba(5,150,105,.08);
+  --accent-b:  rgba(5,150,105,.2);
+  --nav-bg:    rgba(248,250,252,.95);
+  --card-hover-shadow: 0 8px 28px rgba(0,0,0,.1);
+  --glow1: rgba(16,185,129,.06);
+  --glow2: rgba(59,130,246,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.6;transition:background .25s,color .25s}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;transition:background .25s,border-color .25s}
+.logo{font-family:monospace;font-size:17px;font-weight:800;color:var(--accent);letter-spacing:-.01em}
+.nav-center{display:flex;align-items:center;gap:2px}
+.nav-btn{background:transparent;border:none;color:var(--text3);font-size:13px;font-weight:500;padding:6px 14px;border-radius:7px;cursor:pointer;transition:all .18s;font-family:inherit}
+.nav-btn:hover{color:var(--text);background:var(--border)}
+.nav-btn.active{color:var(--accent);background:var(--accent-bg);font-weight:600}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn-cmd{display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text3);cursor:pointer;font-size:12px;font-family:inherit;transition:all .18s}
+.btn-cmd:hover{border-color:var(--border2);color:var(--text2)}
+.kbd{font-family:monospace;font-size:10px;padding:1px 5px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--text4)}
+.btn-resume{display:flex;align-items:center;gap:6px;padding:7px 16px;background:var(--accent);color:#000;font-weight:700;font-size:13px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-resume:hover{background:var(--accent2);transform:translateY(-1px)}
+
+/* THEME TOGGLE */
+.theme-toggle{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .18s;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--accent-b);background:var(--accent-bg)}
+
+/* SECTIONS */
+.section{display:none;min-height:calc(100vh - 56px);animation:fadeUp .3s ease both}
+.section.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:960px;margin:0 auto;padding:44px 28px}
+
+/* TYPOGRAPHY */
+.sec-label{font-family:monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.sec-title{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--text);margin-top:6px;letter-spacing:-.025em}
+.sec-sub{color:var(--text4);margin-top:6px;font-size:13px}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--accent);color:#000;font-weight:700;font-size:13px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:transparent;color:var(--text2);font-weight:500;font-size:13px;border:1px solid var(--border2);border-radius:8px;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-ghost:hover{border-color:var(--accent-b);color:var(--accent)}
+.btn-sm{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:var(--accent);color:#000;font-weight:700;font-size:12px;border:none;border-radius:7px;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-sm:hover{background:var(--accent2)}
+.btn-sm-ghost{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;background:transparent;color:var(--text2);font-weight:500;font-size:12px;border:1px solid var(--border2);border-radius:7px;cursor:pointer;font-family:inherit;transition:all .18s}
+.btn-sm-ghost:hover{border-color:var(--accent-b);color:var(--accent)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-b)}
+.badge-blue{background:rgba(59,130,246,.1);color:#3b82f6;border:1px solid rgba(59,130,246,.2)}
+.badge-amber{background:rgba(245,158,11,.1);color:#d97706;border:1px solid rgba(245,158,11,.2)}
+.badge-neutral{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+
+/* TAGS */
+.tag{display:inline-block;padding:3px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;font-size:12px;color:var(--text2);font-weight:500;transition:all .18s;margin-right:6px;margin-bottom:6px}
+.tag:hover{border-color:var(--accent-b);color:var(--accent)}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .22s}
+.card:hover{border-color:var(--accent-b);transform:translateY(-2px);box-shadow:var(--card-hover-shadow)}
+
+/* STAT */
+.stat-box{text-align:center;padding:20px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:11px}
+.stat-num{font-size:24px;font-weight:700;color:var(--text)}
+.stat-label{font-size:11px;color:var(--text4);margin-top:3px}
+
+/* SKILL CARD */
+.skill-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;transition:all .22s;overflow:hidden;cursor:default}
+.skill-card:hover{border-color:var(--accent-b);transform:translateY(-2px)}
+.skill-card:hover .sk-proj{max-height:60px;opacity:1;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.sk-proj{max-height:0;opacity:0;overflow:hidden;transition:all .28s}
+.pbar-wrap{height:3px;background:var(--bg4);border-radius:2px;margin-top:8px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,#059669,#34d399);border-radius:2px;width:0;transition:width 1s ease}
+
+/* TABS */
+.tab-btn{background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 13px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;transition:all .18s;font-family:inherit}
+.tab-btn:hover{border-color:var(--border2);color:var(--text)}
+.tab-btn.active{background:var(--accent-bg);border-color:var(--accent-b);color:var(--accent);font-weight:600}
+
+/* TIMELINE */
+.tl-wrap{position:relative}
+.tl-line{position:absolute;left:14px;top:0;bottom:0;width:1px;background:var(--border)}
+.tl-item{display:flex;gap:20px;margin-bottom:14px;margin-left:8px}
+.tl-dot{width:30px;height:30px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;position:relative;z-index:1}
+.tl-body{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:9px;margin-top:2px}
+
+/* ARCH */
+.arch-row{display:flex;align-items:center;gap:12px;padding:9px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;margin-bottom:5px}
+
+/* RESULT ITEM */
+.result-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text3);padding:9px;background:var(--bg3);border-radius:7px}
+
+/* FORM */
+.form-label{display:block;font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.inp{width:100%;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;font-family:inherit;transition:border-color .18s}
+.inp:focus{border-color:var(--accent-b)}
+.inp::placeholder{color:var(--text5)}
+
+/* PULSE */
+.dot-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO GLOW */
+.hero-glow{position:absolute;top:10%;right:5%;width:400px;height:400px;border-radius:50%;background:var(--glow1);filter:blur(70px);pointer-events:none}
+.hero-glow2{position:absolute;bottom:10%;left:0;width:300px;height:300px;border-radius:50%;background:var(--glow2);filter:blur(70px);pointer-events:none}
+
+/* COMMAND PALETTE */
+.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:14vh}
+.cmd-box{background:var(--bg3);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.4)}
+.cmd-top{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-family:inherit}
+.cmd-input::placeholder{color:var(--text5)}
+.cmd-group-lbl{font-family:monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text5);padding:9px 14px 4px}
+.cmd-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--text2);border-radius:8px;margin:1px 4px;transition:all .1s}
+.cmd-item:hover,.cmd-item.sel{background:var(--accent-bg);color:var(--accent)}
+
+/* CHATBOT */
+.chat-fab{position:fixed;bottom:20px;right:20px;display:flex;align-items:center;gap:7px;padding:11px 18px;background:var(--accent);color:#000;border:none;border-radius:24px;cursor:pointer;font-weight:700;font-size:13px;box-shadow:0 4px 24px rgba(16,185,129,.3);transition:all .2s;font-family:inherit;z-index:90}
+.chat-fab:hover{background:var(--accent2);transform:translateY(-2px)}
+.chat-win{position:fixed;bottom:20px;right:20px;width:340px;height:500px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);z-index:91;overflow:hidden}
+.chat-hdr{padding:13px 15px;border-bottom:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.chat-msgs{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px}
+.msg-bot{background:var(--bg3);border:1px solid var(--border);border-radius:10px 10px 10px 3px;padding:10px 13px;font-size:12px;color:var(--text2);line-height:1.58;max-width:90%;align-self:flex-start}
+.msg-user{background:var(--accent);border-radius:10px 10px 3px 10px;padding:9px 13px;font-size:12px;color:#000;font-weight:600;max-width:80%;align-self:flex-end}
+.starters{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.starter-btn{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:4px 10px;font-size:11px;color:var(--text3);cursor:pointer;transition:all .18s;font-family:inherit}
+.starter-btn:hover{border-color:var(--accent-b);color:var(--accent)}
+.chat-inp-row{padding:10px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0}
+.chat-inp-wrap{display:flex;align-items:center;gap:7px;background:var(--bg5);border:1px solid var(--border);border-radius:9px;padding:7px 11px;transition:border-color .18s}
+.chat-inp-wrap:focus-within{border-color:var(--accent-b)}
+.chat-inp{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:12px;font-family:inherit}
+.chat-inp::placeholder{color:var(--text5)}
+.chat-send{width:27px;height:27px;background:var(--accent);border:none;border-radius:7px;cursor:pointer;color:#000;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .18s}
+.chat-send:hover{background:var(--accent2)}
+.typing-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--text4);margin-right:3px;animation:typing 1.2s infinite}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <span class="logo">&lt;KS /&gt;</span>
+  <div class="nav-center">
+    <button class="nav-btn active" onclick="go('home',this)">Home</button>
+    <button class="nav-btn" onclick="go('about',this)">About</button>
+    <button class="nav-btn" onclick="go('skills',this)">Skills</button>
+    <button class="nav-btn" onclick="go('projects',this)">Projects</button>
+    <button class="nav-btn" onclick="go('experience',this)">Experience</button>
+    <button class="nav-btn" onclick="go('contact',this)">Contact</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-cmd" onclick="openCmd()">
+      <span style="font-size:14px">&#x2315;</span> Search <span class="kbd">&#8984;K</span>
+    </button>
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#127769;</button>
+    <button class="btn-resume">Resume &#8659;</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="section visible" style="position:relative;overflow:hidden">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="container" style="padding-top:60px;padding-bottom:60px">
+    <div style="margin-bottom:20px">
+      <span class="badge badge-green"><span class="dot-pulse"></span>Open to Internships &mdash; 2025</span>
+    </div>
+    <h1 style="font-size:clamp(36px,5.5vw,60px);font-weight:800;letter-spacing:-.035em;line-height:1.04;color:var(--text);margin-bottom:12px">
+      Kartik <span style="color:var(--accent)">Sonawane</span>
+    </h1>
+    <div style="font-size:18px;color:var(--text4);margin-bottom:18px;display:flex;align-items:center;gap:8px">
+      <span style="color:var(--accent);font-weight:600" id="typed-role">AI/ML Engineer</span>
+      <span id="cursor-el" style="display:inline-block;width:2px;height:18px;background:var(--accent);vertical-align:middle;border-radius:1px"></span>
+    </div>
+    <p style="color:var(--text3);max-width:540px;line-height:1.78;margin-bottom:28px;font-size:14px">
+      Final-year B.Tech student in <span style="color:var(--text);font-weight:500">AI &amp; Machine Learning</span>, building production-grade web apps, ML pipelines, and Android apps. I turn <span style="color:var(--text);font-weight:500">research into working systems</span>.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:44px">
+      <button class="btn-primary" onclick="go('projects',document.querySelectorAll('.nav-btn')[3])">View Projects &#8594;</button>
+      <button class="btn-ghost" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">&#9993; Contact Me</button>
+      <button class="btn-ghost">&#8659; Resume</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:500px;margin-bottom:48px">
+      <div class="stat-box"><div style="font-size:22px;margin-bottom:5px">&#128640;</div><div class="stat-num">10+</div><div class="stat-label">Projects</div></div>
+      <div class="stat-box"><div style="font-size:22px;margin-bottom:5px">&#129504;</div><div class="stat-num">5+</div><div class="stat-label">ML Models</div></div>
+      <div class="stat-box"><div style="font-size:22px;margin-bottom:5px">&#9889;</div><div class="stat-num">20+</div><div class="stat-label">Technologies</div></div>
+      <div class="stat-box"><div style="font-size:22px;margin-bottom:5px">&#128230;</div><div class="stat-num">15+</div><div class="stat-label">Repos</div></div>
+    </div>
+    <div style="display:flex;align-items:center;flex-wrap:wrap">
+      <span style="font-family:monospace;font-size:10px;color:var(--text5);margin-right:10px;letter-spacing:.08em">STACK</span>
+      <span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">React</span><span class="tag">Node.js</span>
+      <span class="tag">Kotlin</span><span class="tag">PyTorch</span><span class="tag">MongoDB</span><span class="tag">Docker</span>
+      <span class="tag">FastAPI</span><span class="tag">YOLOv8</span><span class="tag">Flask</span><span class="tag">Scikit-learn</span>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="section">
+  <div class="container">
+    <div class="sec-label">About</div>
+    <div class="sec-title">The story so far</div>
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:32px;margin-top:28px">
+      <div>
+        <p style="color:var(--text2);line-height:1.8;margin-bottom:14px">I'm <strong style="color:var(--text)">Kartik Sonawane</strong>, a final-year B.Tech student in AI &amp; ML building software at the intersection of intelligence and usability.</p>
+        <p style="color:var(--text3);line-height:1.8;margin-bottom:14px">My journey started with Python and a fascination for how machines learn &mdash; expanding into full-stack web development, Android apps, and deploying real ML models that solve real problems.</p>
+        <p style="color:var(--text3);line-height:1.8;margin-bottom:24px">I believe great software is <em style="color:var(--text2)">invisible</em>. The technology disappears and the experience remains.</p>
+        <div style="display:flex;gap:10px">
+          <button class="btn-primary" style="font-size:12px;padding:7px 15px">&#8659; Resume</button>
+          <button class="btn-ghost" style="font-size:12px;padding:7px 15px">GitHub &#8594;</button>
+          <button class="btn-ghost" style="font-size:12px;padding:7px 15px">LinkedIn &#8594;</button>
+        </div>
+      </div>
+      <div class="card" style="padding:20px;height:fit-content">
+        <div style="margin-bottom:15px">
+          <div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Education</div>
+          <div style="color:var(--text);font-size:13px;font-weight:600">B.Tech CSE (AI &amp; ML)</div>
+          <div style="color:var(--text4);font-size:11px;margin-top:2px">Final Year &middot; 2025</div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:15px;margin-bottom:15px">
+          <div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">Location</div>
+          <div style="color:var(--text);font-size:13px">&#128205; India (Remote-first)</div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:15px">
+          <div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Interests</div>
+          <span class="badge badge-neutral" style="margin-right:4px;margin-bottom:5px">Machine Learning</span>
+          <span class="badge badge-neutral" style="margin-right:4px;margin-bottom:5px">LLMs</span>
+          <span class="badge badge-neutral" style="margin-right:4px;margin-bottom:5px">Computer Vision</span>
+          <span class="badge badge-neutral" style="margin-right:4px;margin-bottom:5px">Android</span>
+          <span class="badge badge-neutral" style="margin-right:4px;margin-bottom:5px">Open Source</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:50px">
+      <div class="sec-label">Journey</div>
+      <div class="tl-wrap" style="margin-top:22px">
+        <div class="tl-line"></div>
+        <div class="tl-item">
+          <div class="tl-dot">&#127891;</div>
+          <div class="tl-body" style="background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2021</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">Started B.Tech &mdash; CSE (AI &amp; ML)</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">Enrolled with specialization in AI &amp; ML. Began Python.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">&#129504;</div>
+          <div class="tl-body" style="background:rgba(139,92,246,.06);border-color:rgba(139,92,246,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2022</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">Discovered Machine Learning</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">Completed Andrew Ng's ML Specialization. Built first neural network from scratch.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">&#128187;</div>
+          <div class="tl-body" style="background:rgba(139,92,246,.06);border-color:rgba(139,92,246,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2023</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">Full-Stack &amp; Android Development</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">MERN stack + Kotlin Android. Built first full-stack app with REST API.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">&#127807;</div>
+          <div class="tl-body" style="background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2023</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">CropMD Shipped</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">ResNet-50 on PlantVillage &mdash; 96.3% accuracy. Deployed on Render.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">&#128188;</div>
+          <div class="tl-body" style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2024</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">ML Internship</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">XGBoost churn model (89% ROC-AUC), Flask API, Streamlit dashboard.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">&#128640;</div>
+          <div class="tl-body" style="background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.18)">
+            <div style="font-family:monospace;font-size:10px;color:var(--text4)">2024</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">VisionTrack &amp; DevConnect</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">On-device YOLOv8 Android app + full MERN social platform with JWT auth.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:var(--accent-b)">&#127919;</div>
+          <div class="tl-body" style="background:var(--accent-bg);border-color:var(--accent-b)">
+            <div style="font-family:monospace;font-size:10px;color:var(--accent)">2025</div>
+            <div style="font-weight:600;color:var(--text);font-size:13px;margin-top:2px">Final Year &mdash; Seeking Internship</div>
+            <div style="color:var(--text3);font-size:12px;margin-top:3px;line-height:1.6">Targeting AI Engineer, ML Engineer &amp; Full-Stack Developer roles.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div id="skills" class="section">
+  <div class="container">
+    <div class="sec-label">Skills</div>
+    <div class="sec-title">The tech I build with</div>
+    <p class="sec-sub">Hover any card to see which projects use that skill.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px" id="skill-tabs">
+      <button class="tab-btn active" onclick="filterSkills('All',this)">All</button>
+      <button class="tab-btn" onclick="filterSkills('AI/ML',this)">AI / ML</button>
+      <button class="tab-btn" onclick="filterSkills('Languages',this)">Languages</button>
+      <button class="tab-btn" onclick="filterSkills('Backend',this)">Backend</button>
+      <button class="tab-btn" onclick="filterSkills('Frontend',this)">Frontend</button>
+      <button class="tab-btn" onclick="filterSkills('Databases',this)">Databases</button>
+      <button class="tab-btn" onclick="filterSkills('Tools',this)">Tools</button>
+    </div>
+    <div id="skill-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:20px"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px">
+      <div class="stat-box"><div class="stat-num">23+</div><div class="stat-label">Technologies</div></div>
+      <div class="stat-box"><div class="stat-num">8</div><div class="stat-label">AI/ML Frameworks</div></div>
+      <div class="stat-box"><div class="stat-num">80%</div><div class="stat-label">Avg Proficiency</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div id="projects" class="section">
+  <div class="container">
+    <div class="sec-label">Projects</div>
+    <div class="sec-title">Things I've shipped</div>
+    <p class="sec-sub">Full case studies with architecture decisions, challenges, and results.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;margin-bottom:24px" id="proj-tabs">
+      <button class="tab-btn active" onclick="filterProjects('All',this)">All</button>
+      <button class="tab-btn" onclick="filterProjects('AI/ML',this)">AI / ML</button>
+      <button class="tab-btn" onclick="filterProjects('Full-Stack',this)">Full-Stack</button>
+      <button class="tab-btn" onclick="filterProjects('Android',this)">Android</button>
+    </div>
+
+    <div class="card proj-card" data-cat="Full-Stack" style="padding:28px;border-top:2px solid #3B82F6;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 240px;gap:28px">
+        <div>
+          <span class="badge badge-blue">Full-Stack</span>
+          <h3 style="font-size:22px;font-weight:700;color:var(--text);margin-top:10px">DevConnect</h3>
+          <p style="color:var(--text4);font-style:italic;font-size:12px;margin-top:3px">Where developers connect, collaborate, and grow.</p>
+          <p style="color:var(--text3);margin-top:13px;line-height:1.68;font-size:13px">Full-stack social platform &mdash; MERN stack, JWT refresh token rotation, real-time notifications, sub-50ms API response times via compound MongoDB indexes.</p>
+          <div style="margin-top:13px"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">MongoDB</span><span class="tag">Express</span><span class="tag">JWT</span><span class="tag">REST API</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px">
+            <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>Sub-50ms API response</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>JWT refresh token rotation</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>MongoDB compound indexes</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text3)"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>Mobile-first responsive</div>
+          </div>
+          <div style="display:flex;gap:9px;margin-top:18px">
+            <button class="btn-sm">Case Study &#8594;</button>
+            <button class="btn-sm-ghost">GitHub</button>
+            <button class="btn-sm-ghost">Live Demo &#8599;</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:11px">Architecture</div>
+          <div class="arch-row"><div style="width:6px;height:6px;border-radius:50%;background:#3B82F6;flex-shrink:0"></div><span style="font-size:11px;color:var(--text4);width:68px;flex-shrink:0">Frontend</span><span style="font-size:11px;color:var(--text2)">React + Tailwind</span></div>
+          <div class="arch-row"><div style="width:6px;height:6px;border-radius:50%;background:#3B82F6;flex-shrink:0"></div><span style="font-size:11px;color:var(--text4);width:68px;flex-shrink:0">API</span><span style="font-size:11px;color:var(--text2)">Express REST + JWT</span></div>
+          <div class="arch-row"><div style="width:6px;height:6px;border-radius:50%;background:#3B82F6;flex-shrink:0"></div><span style="font-size:11px;color:var(--text4);width:68px;flex-shrink:0">Database</span><span style="font-size:11px;color:var(--text2)">MongoDB Atlas</span></div>
+          <div class="arch-row"><div style="width:6px;height:6px;border-radius:50%;background:#3B82F6;flex-shrink:0"></div><span style="font-size:11px;color:var(--text4);width:68px;flex-shrink:0">Auth</span><span style="font-size:11px;color:var(--text2)">JWT + bcrypt</span></div>
+          <div class="arch-row"><div style="width:6px;height:6px;border-radius:50%;background:#3B82F6;flex-shrink:0"></div><span style="font-size:11px;color:var(--text4);width:68px;flex-shrink:0">Deploy</span><span style="font-size:11px;color:var(--text2)">Vercel + Render</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card proj-card" data-cat="Android AI/ML" style="padding:22px;border-top:2px solid #10b981">
+        <span class="badge badge-green">Android + AI</span>
+        <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-top:10px">VisionTrack</h3>
+        <p style="color:var(--text4);font-style:italic;font-size:12px;margin-top:3px">Real-time AI object detection on Android.</p>
+        <p style="color:var(--text3);margin-top:11px;line-height:1.65;font-size:12px">TFLite + YOLOv8 nano (INT8 quantized). GPU delegate for hardware acceleration. Runs 100% offline.</p>
+        <div style="margin-top:11px"><span class="tag">Kotlin</span><span class="tag">TFLite</span><span class="tag">YOLOv8</span><span class="tag">CameraX</span></div>
+        <div style="margin-top:13px;padding:9px 12px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:7px;font-family:monospace;font-size:11px;color:var(--accent)">
+          &#9889; &lt;30ms &middot; 80 COCO classes &middot; offline
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-sm">Case Study &#8594;</button><button class="btn-sm-ghost">GitHub</button></div>
+      </div>
+      <div class="card proj-card" data-cat="AI/ML Full-Stack" style="padding:22px;border-top:2px solid #F59E0B">
+        <span class="badge badge-amber">AI/ML + Web</span>
+        <h3 style="font-size:18px;font-weight:700;color:var(--text);margin-top:10px">CropMD</h3>
+        <p style="color:var(--text4);font-style:italic;font-size:12px;margin-top:3px">AI-powered crop disease diagnosis for farmers.</p>
+        <p style="color:var(--text3);margin-top:11px;line-height:1.65;font-size:12px">ResNet-50 fine-tuned on PlantVillage (54K images). 96.3% validation accuracy on 38 disease classes.</p>
+        <div style="margin-top:11px"><span class="tag">TensorFlow</span><span class="tag">ResNet-50</span><span class="tag">Flask</span><span class="tag">React</span></div>
+        <div style="margin-top:13px;padding:9px 12px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:7px;font-family:monospace;font-size:11px;color:#d97706">
+          &#127919; 96.3% accuracy &middot; 38 classes &middot; &lt;2s inference
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-sm">Case Study &#8594;</button><button class="btn-sm-ghost">Live Demo &#8599;</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div id="experience" class="section">
+  <div class="container">
+    <div class="sec-label">Experience</div>
+    <div class="sec-title">Where I've worked</div>
+    <div class="card" style="padding:28px;margin-top:24px;border-left:3px solid #F59E0B">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px">
+        <div>
+          <span class="badge badge-amber">Internship</span>
+          <h3 style="font-size:19px;font-weight:700;color:var(--text);margin-top:8px">Machine Learning Intern</h3>
+          <p style="color:var(--accent);font-weight:600;font-size:13px;margin-top:3px">Tech Company</p>
+        </div>
+        <div style="text-align:right;font-size:12px;color:var(--text4);flex-shrink:0">
+          <div>&#128197; 3 Months &middot; 2024</div>
+          <div style="margin-top:4px">&#128205; Remote</div>
+        </div>
+      </div>
+      <p style="color:var(--text3);font-size:13px;line-height:1.7;margin-bottom:18px">End-to-end customer churn prediction system &mdash; from raw CRM data ingestion to a production-deployed Flask REST API with Streamlit dashboard for business stakeholders.</p>
+      <div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:11px">Key Contributions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Built XGBoost churn model achieving 89% ROC-AUC</span></div>
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Engineered 40+ features from raw CRM data</span></div>
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Deployed Flask REST API for real-time scoring</span></div>
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Reduced inference time 35% via feature selection</span></div>
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Created Streamlit dashboard for stakeholders</span></div>
+        <div class="result-item"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px"></div><span>Wrote data validation scripts, caught 3 issues</span></div>
+      </div>
+      <div style="margin-bottom:16px"><span class="tag">Python</span><span class="tag">XGBoost</span><span class="tag">Scikit-learn</span><span class="tag">Flask</span><span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Streamlit</span></div>
+      <div style="padding:10px 14px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;font-family:monospace;font-size:12px;color:var(--accent)">
+        &#127942; 89% ROC-AUC &middot; 35% faster inference &middot; Production deployed
+      </div>
+    </div>
+    <div style="margin-top:18px;padding:26px;background:var(--accent-bg);border:1px solid var(--accent-b);border-radius:12px;text-align:center">
+      <div style="font-size:28px;margin-bottom:10px">&#127919;</div>
+      <p style="font-weight:700;color:var(--text);font-size:17px">Open to new opportunities</p>
+      <p style="color:var(--text4);font-size:12px;margin-top:5px;margin-bottom:18px">Seeking AI Engineer, ML Engineer &amp; Full-Stack Developer internships &mdash; 2025</p>
+      <div style="display:flex;justify-content:center;gap:10px">
+        <button class="btn-primary" style="font-size:12px" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Get in touch &#8594;</button>
+        <button class="btn-ghost" style="font-size:12px">&#8659; Resume</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="section">
+  <div class="container">
+    <div class="sec-label">Contact</div>
+    <div class="sec-title">Let's work together</div>
+    <p class="sec-sub" style="margin-bottom:28px">Actively looking for AI/ML and Full-Stack internship opportunities for 2025.</p>
+    <div style="display:grid;grid-template-columns:1fr 260px;gap:28px">
+      <form onsubmit="submitContact(event)" style="display:flex;flex-direction:column;gap:15px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+          <div><label class="form-label">Name *</label><input id="fn" class="inp" placeholder="Your name" required></div>
+          <div><label class="form-label">Email *</label><input id="fe" class="inp" type="email" placeholder="you@email.com" required></div>
+        </div>
+        <div><label class="form-label">Subject</label>
+          <select class="inp"><option value="">Select a topic</option><option>Internship Opportunity</option><option>Project Collaboration</option><option>Freelance Work</option><option>Just saying hi!</option></select>
+        </div>
+        <div><label class="form-label">Message *</label><textarea id="fm" class="inp" placeholder="What's on your mind?" rows="5" required style="resize:none"></textarea></div>
+        <button type="submit" class="btn-primary" style="justify-content:center;padding:11px;font-size:14px">&#9993; Send Message</button>
+        <div id="form-ok" style="display:none;padding:11px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.22);border-radius:8px;font-size:12px;color:var(--accent);text-align:center">&#10003; Message sent! Kartik will get back to you soon.</div>
+      </form>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg2);border:1px solid var(--border);border-radius:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-b);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">&#9993;</div>
+          <div><div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase">Email</div><div style="font-size:11px;color:var(--text2);margin-top:2px">kartikjaywantsonawane@gmail.com</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg2);border:1px solid var(--border);border-radius:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-b);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">&#9447;</div>
+          <div><div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase">GitHub</div><div style="font-size:11px;color:var(--text2);margin-top:2px">@kartikjsonawane</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg2);border:1px solid var(--border);border-radius:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">in</div>
+          <div><div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase">LinkedIn</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Kartik Sonawane</div></div>
+        </div>
+        <div style="padding:14px;background:var(--accent-bg);border:1px solid var(--accent-b);border-radius:10px">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><span class="dot-pulse"></span><span style="font-size:12px;color:var(--accent);font-weight:600">Available for Internships</span></div>
+          <p style="font-size:11px;color:var(--text4);line-height:1.6">Targeting AI Engineer, ML Engineer &amp; Full-Stack Developer roles. Graduating 2025.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div id="cmd-overlay" class="cmd-overlay" style="display:none" onclick="if(event.target===this)closeCmd()">
+  <div class="cmd-box">
+    <div class="cmd-top">
+      <span style="font-size:16px;color:var(--text4)">&#x2315;</span>
+      <input class="cmd-input" id="cmd-input" placeholder="Search pages, projects, skills..." oninput="renderCmd(this.value)" onkeydown="cmdKey(event)" autocomplete="off">
+      <span class="kbd">ESC</span>
+    </div>
+    <div id="cmd-results" style="max-height:300px;overflow-y:auto;padding:6px"></div>
+    <div style="padding:8px 14px;border-top:1px solid var(--border);display:flex;gap:14px;font-family:monospace;font-size:9px;color:var(--text5)">
+      <span>&#8593;&#8595; navigate</span><span>&#8629; select</span><span>ESC close</span>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<button class="chat-fab" id="chat-fab" onclick="openChat()">&#10024; Ask Kartik</button>
+<div class="chat-win" id="chat-win" style="display:none">
+  <div class="chat-hdr">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:28px;height:28px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px">&#10024;</div>
+      <div><div style="font-size:13px;font-weight:600;color:var(--text)">Ask Kartik</div><div style="font-size:10px;color:var(--text4)">AI Portfolio Assistant</div></div>
+    </div>
+    <button onclick="closeChat()" style="background:transparent;border:none;color:var(--text4);font-size:20px;cursor:pointer;padding:2px 8px;line-height:1;font-family:inherit">&#215;</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg-bot">Hi! I'm <strong>Ask Kartik</strong> &mdash; your AI guide to Kartik's portfolio.<br><br>Ask me about his projects, skills, or experience! &#128075;</div>
+    <div class="starters">
+      <button class="starter-btn" onclick="askBot(this.textContent)">Tell me about DevConnect</button>
+      <button class="starter-btn" onclick="askBot(this.textContent)">What ML projects?</button>
+      <button class="starter-btn" onclick="askBot(this.textContent)">Why hire Kartik?</button>
+      <button class="starter-btn" onclick="askBot(this.textContent)">VisionTrack details</button>
+    </div>
+  </div>
+  <div class="chat-inp-row">
+    <div class="chat-inp-wrap">
+      <input class="chat-inp" id="chat-input" placeholder="Ask anything about Kartik...">
+      <button class="chat-send" onclick="sendChat()">&#8594;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* THEME TOGGLE */
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('ks-theme', isDark ? 'light' : 'dark');
+}
+(function(){
+  var saved = localStorage.getItem('ks-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('theme-btn').textContent = saved === 'dark' ? '🌙' : '☀️';
+})();
+
+/* SKILLS */
+var SKILLS = [
+  {n:'Python',       l:90, y:3,   i:'&#128013;', cat:'Languages', p:['CropMD','ML Internship','FastAPI']},
+  {n:'JavaScript',   l:85, y:2,   i:'&#9889;',   cat:'Languages', p:['DevConnect','Portfolio']},
+  {n:'Kotlin',       l:80, y:1.5, i:'&#127919;', cat:'Languages', p:['VisionTrack']},
+  {n:'Java',         l:75, y:2,   i:'&#9749;',   cat:'Languages', p:['Android Projects']},
+  {n:'TypeScript',   l:70, y:1,   i:'&#128311;', cat:'Languages', p:['Portfolio']},
+  {n:'TensorFlow',   l:82, y:2,   i:'&#129504;', cat:'AI/ML',     p:['CropMD','VisionTrack']},
+  {n:'PyTorch',      l:72, y:1.5, i:'&#128293;', cat:'AI/ML',     p:['Research']},
+  {n:'Scikit-learn', l:85, y:2,   i:'&#128300;', cat:'AI/ML',     p:['ML Internship','Churn Model']},
+  {n:'OpenCV',       l:78, y:1.5, i:'&#128065;', cat:'AI/ML',     p:['VisionTrack']},
+  {n:'XGBoost',      l:80, y:1.5, i:'&#127795;', cat:'AI/ML',     p:['Churn Prediction']},
+  {n:'YOLOv8',       l:75, y:1,   i:'&#127919;', cat:'AI/ML',     p:['VisionTrack']},
+  {n:'React',        l:85, y:2,   i:'&#9883;',   cat:'Frontend',  p:['DevConnect','CropMD','Portfolio']},
+  {n:'Tailwind CSS', l:88, y:1.5, i:'&#127912;', cat:'Frontend',  p:['Portfolio','DevConnect']},
+  {n:'Node.js',      l:82, y:2,   i:'&#128154;', cat:'Backend',   p:['DevConnect']},
+  {n:'Express.js',   l:80, y:2,   i:'&#128642;', cat:'Backend',   p:['DevConnect','REST APIs']},
+  {n:'Flask',        l:85, y:2,   i:'&#129707;', cat:'Backend',   p:['CropMD','ML Internship']},
+  {n:'FastAPI',      l:78, y:1,   i:'&#128640;', cat:'Backend',   p:['ML Inference API']},
+  {n:'MongoDB',      l:82, y:2,   i:'&#127807;', cat:'Databases', p:['DevConnect','Portfolio']},
+  {n:'MySQL',        l:78, y:2,   i:'&#128031;', cat:'Databases', p:['Academic Projects']},
+  {n:'Git',          l:88, y:3,   i:'&#128230;', cat:'Tools',     p:['All Projects']},
+  {n:'Docker',       l:72, y:1,   i:'&#128051;', cat:'Tools',     p:['API Deployment']},
+  {n:'Streamlit',    l:80, y:1.5, i:'&#127880;', cat:'Tools',     p:['ML Dashboards']},
+  {n:'AWS S3',       l:68, y:1,   i:'&#9729;',   cat:'Tools',     p:['File Storage']}
+];
+
+function renderSkills(cat) {
+  var data = (cat === 'All') ? SKILLS : SKILLS.filter(function(s){ return s.cat === cat; });
+  var html = '';
+  data.forEach(function(s) {
+    var badges = s.p.map(function(p){ return '<span class="badge badge-neutral" style="margin-right:3px;margin-bottom:3px;font-size:10px">'+p+'</span>'; }).join('');
+    html += '<div class="skill-card">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+      +'<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">'+s.i+'</span>'
+      +'<span style="font-weight:600;color:var(--text);font-size:13px">'+s.n+'</span></div>'
+      +'<span style="font-family:monospace;font-size:11px;color:var(--accent);font-weight:600">'+s.l+'%</span></div>'
+      +'<div class="pbar-wrap"><div class="pbar" data-w="'+s.l+'"></div></div>'
+      +'<div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--text4)">'
+      +'<span>'+s.y+'y exp</span><span>'+s.p.length+' project'+(s.p.length>1?'s':'')+'</span></div>'
+      +'<div class="sk-proj"><div style="font-family:monospace;font-size:9px;color:var(--text5);text-transform:uppercase;margin-bottom:5px">Used in</div>'+badges+'</div>'
+      +'</div>';
+  });
+  document.getElementById('skill-grid').innerHTML = html;
+  setTimeout(function(){
+    document.querySelectorAll('.pbar').forEach(function(el){ el.style.width = el.getAttribute('data-w')+'%'; });
+  }, 60);
+}
+function filterSkills(cat, btn) {
+  document.querySelectorAll('#skill-tabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active'); renderSkills(cat);
+}
+function filterProjects(cat, btn) {
+  document.querySelectorAll('#proj-tabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(function(c){
+    c.style.display = (cat==='All' || c.getAttribute('data-cat').indexOf(cat)!==-1) ? '' : 'none';
+  });
+}
+function go(id, btn) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('visible'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById(id).classList.add('visible');
+  if (btn) btn.classList.add('active');
+  if (id==='skills') renderSkills('All');
+  window.scrollTo(0,0);
+}
+
+/* COMMAND PALETTE */
+var CMD_ALL = [
+  {l:'Home',          i:'&#127968;',sec:'home',      ni:0},
+  {l:'About',         i:'&#128100;',sec:'about',     ni:1},
+  {l:'Skills',        i:'&#9889;',  sec:'skills',    ni:2},
+  {l:'Projects',      i:'&#128193;',sec:'projects',  ni:3},
+  {l:'Experience',    i:'&#128188;',sec:'experience',ni:4},
+  {l:'Contact',       i:'&#9993;',  sec:'contact',   ni:5},
+  {l:'DevConnect',    i:'&#128279;',sec:'projects',  ni:3},
+  {l:'VisionTrack',   i:'&#128241;',sec:'projects',  ni:3},
+  {l:'CropMD',        i:'&#127807;',sec:'projects',  ni:3},
+  {l:'GitHub Profile',i:'&#9447;',  url:'https://github.com/kartikjsonawane'},
+  {l:'Download Resume',i:'&#128196;',url:'#'}
+];
+var cmdItems=CMD_ALL.slice(), cmdSel=0;
+function openCmd(){
+  document.getElementById('cmd-overlay').style.display='flex';
+  var inp=document.getElementById('cmd-input'); inp.value='';
+  cmdItems=CMD_ALL.slice(); cmdSel=0; renderCmdItems();
+  setTimeout(function(){ inp.focus(); },50);
+}
+function closeCmd(){ document.getElementById('cmd-overlay').style.display='none'; }
+function renderCmdItems(){
+  var html='';
+  var nav=cmdItems.filter(function(c){return c.sec;}), ext=cmdItems.filter(function(c){return c.url;});
+  if(nav.length) html+='<div class="cmd-group-lbl">Navigation</div>';
+  nav.forEach(function(c){var i=cmdItems.indexOf(c);html+='<div class="cmd-item'+(i===cmdSel?' sel':'')+'" onclick="execCmd('+i+')" onmouseenter="cmdSel='+i+';renderCmdItems()"><span style="font-size:14px;width:20px;text-align:center">'+c.i+'</span><span>'+c.l+'</span></div>';});
+  if(ext.length) html+='<div class="cmd-group-lbl">External</div>';
+  ext.forEach(function(c){var i=cmdItems.indexOf(c);html+='<div class="cmd-item'+(i===cmdSel?' sel':'')+'" onclick="execCmd('+i+')" onmouseenter="cmdSel='+i+';renderCmdItems()"><span style="font-size:14px;width:20px;text-align:center">'+c.i+'</span><span>'+c.l+'</span></div>';});
+  if(!cmdItems.length) html='<div style="padding:20px;text-align:center;color:var(--text5);font-size:13px">No results</div>';
+  document.getElementById('cmd-results').innerHTML=html;
+}
+function renderCmd(q){ cmdItems=CMD_ALL.filter(function(c){return c.l.toLowerCase().indexOf(q.toLowerCase())!==-1;}); cmdSel=0; renderCmdItems(); }
+function execCmd(i){ var c=cmdItems[i]; if(!c) return; if(c.url) window.open(c.url,'_blank'); else go(c.sec,document.querySelectorAll('.nav-btn')[c.ni]); closeCmd(); }
+function cmdKey(e){
+  if(e.key==='ArrowDown'){cmdSel=Math.min(cmdSel+1,cmdItems.length-1);renderCmdItems();e.preventDefault();}
+  else if(e.key==='ArrowUp'){cmdSel=Math.max(cmdSel-1,0);renderCmdItems();e.preventDefault();}
+  else if(e.key==='Enter') execCmd(cmdSel);
+  else if(e.key==='Escape') closeCmd();
+}
+document.addEventListener('keydown',function(e){ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd();} });
+
+/* CHATBOT */
+var BOT={
+  devconnect:'<strong>DevConnect</strong> is a full-stack social platform on the MERN stack.<br><br>&#10003; JWT auth with refresh token rotation<br>&#10003; <strong>&lt;50ms API response</strong> via compound MongoDB indexes<br>&#10003; Developer profiles + project showcase<br>&#10003; Deployed on Vercel + Render',
+  visiontrack:'<strong>VisionTrack</strong> is a real-time Android AI detection app.<br><br>&#10003; <strong>&lt;30ms inference</strong> on mid-range Android devices<br>&#10003; YOLOv8 nano INT8 quantized (6.3MB model)<br>&#10003; 100% offline &#8212; no internet required<br>&#10003; 80 COCO object classes',
+  cropmd:'<strong>CropMD</strong> classifies crop diseases from photos.<br><br>&#10003; ResNet-50 on PlantVillage (54,000 images)<br>&#10003; <strong>96.3% validation accuracy</strong> &#183; 38 disease classes<br>&#10003; Flask REST API + React frontend<br>&#10003; &lt;2s inference in production',
+  hire:'Why hire Kartik?<br><br>&#10003; <strong>End-to-end builder</strong> &#8212; ML model &#8594; API &#8594; frontend &#8594; deployment<br>&#10003; <strong>Ships real things</strong> &#8212; 3 production projects + ML internship<br>&#10003; <strong>Cross-domain</strong> &#8212; AI/ML + Full-Stack + Android<br>&#10003; 96.3% accuracy, 89% ROC-AUC, &lt;30ms inference',
+  ml:'Kartik\'s production ML systems:<br><br>&#127807; <strong>CropMD</strong> &#8212; ResNet-50 (96.3% accuracy)<br>&#128241; <strong>VisionTrack</strong> &#8212; On-device YOLOv8 (&lt;30ms)<br>&#128188; <strong>Churn Model</strong> &#8212; XGBoost (89% ROC-AUC)<br>&#128202; <strong>Streamlit</strong> &#8212; Business analytics dashboard',
+  skills:'Kartik\'s full stack:<br><br>&#128013; <strong>Languages</strong>: Python, JavaScript, Kotlin, Java<br>&#9883; <strong>Frontend</strong>: React, Tailwind CSS<br>&#128642; <strong>Backend</strong>: Node.js, Express, Flask, FastAPI<br>&#129504; <strong>AI/ML</strong>: TensorFlow, PyTorch, XGBoost, YOLOv8',
+  contact:'Reach Kartik at:<br><br>&#9993; kartikjaywantsonawane@gmail.com<br>&#9447; github.com/kartikjsonawane<br><br>Seeking <strong>2025 internships</strong> in AI/ML &amp; Full-Stack.'
+};
+function getBotReply(msg){
+  var m=msg.toLowerCase();
+  if(m.indexOf('devconnect')!==-1) return BOT.devconnect;
+  if(m.indexOf('visiontrack')!==-1) return BOT.visiontrack;
+  if(m.indexOf('cropmd')!==-1||m.indexOf('crop')!==-1) return BOT.cropmd;
+  if(m.indexOf('hire')!==-1||m.indexOf('why')!==-1) return BOT.hire;
+  if(m.indexOf('ml')!==-1||m.indexOf('machine')!==-1||m.indexOf('model')!==-1) return BOT.ml;
+  if(m.indexOf('skill')!==-1||m.indexOf('tech')!==-1||m.indexOf('stack')!==-1) return BOT.skills;
+  if(m.indexOf('contact')!==-1||m.indexOf('email')!==-1) return BOT.contact;
+  if(m.indexOf('project')!==-1) return '3 flagship projects:<br><br>&#128279; <strong>DevConnect</strong> &#8212; MERN social platform<br>&#128241; <strong>VisionTrack</strong> &#8212; Android AI detection<br>&#127807; <strong>CropMD</strong> &#8212; Crop disease classifier';
+  return 'Ask me about Kartik\'s <strong>projects</strong>, <strong>skills</strong>, <strong>ML experience</strong>, or <strong>why to hire him</strong>!';
+}
+function openChat(){ document.getElementById('chat-fab').style.display='none'; document.getElementById('chat-win').style.display='flex'; setTimeout(function(){document.getElementById('chat-input').focus();},200); }
+function closeChat(){ document.getElementById('chat-win').style.display='none'; document.getElementById('chat-fab').style.display='flex'; }
+function askBot(msg){
+  var box=document.getElementById('chat-msgs');
+  box.innerHTML+='<div class="msg-user">'+msg+'</div>';
+  var id='tb'+Date.now();
+  box.innerHTML+='<div id="'+id+'" class="msg-bot"><span class="typing-dot" style="animation-delay:0s"></span><span class="typing-dot" style="animation-delay:.15s"></span><span class="typing-dot" style="animation-delay:.3s"></span></div>';
+  box.scrollTop=box.scrollHeight;
+  setTimeout(function(){ var el=document.getElementById(id); if(el) el.innerHTML=getBotReply(msg); box.scrollTop=box.scrollHeight; },900);
+}
+function sendChat(){ var i=document.getElementById('chat-input'); var v=i.value.trim(); if(v){askBot(v);i.value='';} }
+document.getElementById('chat-input').addEventListener('keydown',function(e){ if(e.key==='Enter') sendChat(); });
+
+function submitContact(e){
+  e.preventDefault();
+  var ok=document.getElementById('form-ok'); ok.style.display='block';
+  document.getElementById('fn').value=''; document.getElementById('fe').value=''; document.getElementById('fm').value='';
+  setTimeout(function(){ ok.style.display='none'; },5000);
+}
+
+/* TYPING */
+var roles=['AI/ML Engineer','Full-Stack Developer','Android Developer','API Engineer'];
+var ri=0,ci=0,del=false;
+function typeRole(){
+  var el=document.getElementById('typed-role'); if(!el) return;
+  var w=roles[ri];
+  if(!del){el.textContent=w.slice(0,++ci); if(ci===w.length){del=true;setTimeout(typeRole,1800);return;}}
+  else{el.textContent=w.slice(0,--ci); if(ci===0){del=false;ri=(ri+1)%roles.length;setTimeout(typeRole,400);return;}}
+  setTimeout(typeRole,del?50:90);
+}
+var cur=document.getElementById('cursor-el');
+if(cur) setInterval(function(){cur.style.opacity=(cur.style.opacity==='0')?'1':'0';},500);
+setTimeout(typeRole,700);
+
+renderSkills('All');
+renderCmdItems();
+</script>
+</body>
+</html>
