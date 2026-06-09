@@ -1,4 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react'
+import { marked } from 'marked'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
@@ -153,7 +154,7 @@ export default function BlogDetail() {
 
           <div
             className="mt-10 prose dark:prose-invert prose-sm max-w-none prose-headings:font-semibold prose-a:text-emerald-600"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: marked.parse(post.content) as string }}
           />
 
           {/* Comments */}
