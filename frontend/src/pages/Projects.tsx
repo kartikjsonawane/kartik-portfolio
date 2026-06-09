@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiGithub, FiExternalLink, FiArrowRight } from 'react-icons/fi'
+import { FiGithub, FiArrowRight } from 'react-icons/fi'
 import PageTransition from '@/components/ui/PageTransition'
 import { PROJECTS } from '@/data/portfolio'
 
@@ -125,16 +125,6 @@ export default function Projects() {
                             >
                               <FiGithub className="w-4 h-4" /> GitHub
                             </a>
-                            {proj.demo && (
-                              <a
-                                href={proj.demo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn-secondary text-sm py-2"
-                              >
-                                <FiExternalLink className="w-4 h-4" /> Live Demo
-                              </a>
-                            )}
                           </div>
                         </div>
 
