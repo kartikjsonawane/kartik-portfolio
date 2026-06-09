@@ -6,7 +6,7 @@ export const PROFILE = {
   email: 'kartikjaywantsonawane@gmail.com',
   github: 'https://github.com/kartikjsonawane',
   githubUsername: 'kartikjsonawane',
-  linkedin: 'https://linkedin.com/in/kartiksonawane',
+  linkedin: 'https://linkedin.com/in/kartikjsonawane',
   location: 'India',
   resumeUrl: '/Kartik_Sonawane_Resume.pdf',
   bio: "Final-year B.Tech student in AI & ML, building production-grade web applications, machine learning pipelines, and Android apps. I love turning research papers into working systems and complex APIs into clean interfaces.",
