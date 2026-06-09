@@ -1,20 +1,47 @@
 # Kartik Sonawane — Portfolio
 
-Premium personal portfolio for **Kartik Sonawane**, AI/ML Engineer & Full-Stack Developer.
+> AI/ML Engineer & Full-Stack Developer · Final-year B.Tech CSE (AI & ML)
 
-Built with React + Vite + Tailwind CSS (frontend) and Node.js + Express + MongoDB (backend), with an AI chatbot powered by Google Gemini.
+**Live:** [kartik-portfolio-pearl-two.vercel.app](https://kartik-portfolio-pearl-two.vercel.app) &nbsp;|&nbsp; **API:** [kartik-portfolio-5ow5.onrender.com](https://kartik-portfolio-5ow5.onrender.com)
 
 ---
 
-## Stack
+## What's inside
 
-| Layer     | Technology |
-|-----------|-----------|
-| Frontend  | React 18, TypeScript, Vite, Tailwind CSS, Framer Motion |
-| Backend   | Node.js, Express.js |
-| Database  | MongoDB Atlas (Mongoose) |
-| AI Chatbot| Google Gemini 1.5 Flash |
-| Deployment| Vercel (frontend) + Render (backend) |
+A full-stack portfolio with a CMS, blog, real-time chat, admin dashboard, and an AI chatbot — built to impress recruiters at top tech companies.
+
+### Pages
+- **Home** — animated hero, GitHub stats, featured projects
+- **About** — interactive timeline, certifications, career goals
+- **Skills** — filterable skill cards with proficiency visualization
+- **Projects** — full case studies for DevConnect, VisionTrack, CropMD
+- **Experience** — internship timeline with highlights
+- **Blog** — admin-managed posts with comments and likes
+- **Contact** — contact form with email integration
+- **Chat** — real-time Socket.io chat (authenticated users)
+
+### Features
+- 🤖 **Ask Kartik AI** — floating chatbot powered by Groq (Llama 3.3 70B)
+- ⌨️ **Command Palette** — `Ctrl+K` to search and navigate
+- 🌓 **Dark / Light Mode** — persisted to localStorage
+- 🔐 **Auth System** — JWT, register/login, admin role
+- 📝 **Admin Dashboard** — create/edit posts, manage projects, moderate comments
+- 💬 **Real-time Chat** — Socket.io with typing indicators
+- 📊 **GitHub Stats** — live GitHub API integration
+- 📱 **Mobile-first** — fully responsive at all breakpoints
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, Framer Motion |
+| Backend | Node.js, Express.js, Socket.io |
+| Database | MongoDB Atlas (Mongoose) |
+| Auth | JWT (access tokens + cookies) |
+| AI Chatbot | Groq API — Llama 3.3 70B Versatile |
+| Deployment | Vercel (frontend) + Render (backend) |
 
 ---
 
@@ -22,163 +49,135 @@ Built with React + Vite + Tailwind CSS (frontend) and Node.js + Express + MongoD
 
 ```
 kartik-portfolio/
-├── frontend/              # React + Vite app
+├── frontend/                  # React + Vite app
 │   ├── src/
-│   │   ├── pages/         # Home, About, Skills, Projects, Experience, Blog, Contact
+│   │   ├── pages/             # All page components
+│   │   │   ├── admin/         # Dashboard, PostEditor, ProjectManager
+│   │   │   └── auth/          # Login, Register
 │   │   ├── components/
-│   │   │   ├── layout/    # Navbar, Footer
-│   │   │   ├── home/      # GitHubStats
-│   │   │   ├── chatbot/   # AskKartik AI chatbot
-│   │   │   └── ui/        # CommandPalette, PageTransition
-│   │   ├── data/          # portfolio.ts — all content in one place
-│   │   ├── hooks/         # useCommandPalette, useScrollAnimation
-│   │   └── utils/         # cn.ts
-│   ├── .env.example
+│   │   │   ├── layout/        # Navbar, Footer
+│   │   │   ├── chatbot/       # AskKartik AI widget
+│   │   │   └── ui/            # CommandPalette, PageTransition, ScrollToTop
+│   │   ├── contexts/          # AuthContext, ThemeContext
+│   │   ├── services/          # api.ts (axios), socket.ts (Socket.io)
+│   │   └── data/              # portfolio.ts — all content in one file
 │   ├── vercel.json
-│   └── package.json
+│   └── .env.example
 │
-└── backend/               # Node.js + Express API
+└── backend/                   # Node.js + Express API
     ├── src/
-    │   ├── server.js      # Entry point
-    │   ├── routes/
-    │   │   ├── contact.js    # POST /api/contact
-    │   │   ├── chatbot.js    # POST /api/chatbot (Gemini)
-    │   │   └── analytics.js  # POST /api/analytics/pageview
-    │   └── models/
-    │       ├── Contact.js
-    │       ├── ChatSession.js
-    │       └── Visitor.js
-    ├── .env.example
-    └── package.json
+    │   ├── server.js          # Entry point + Socket.io
+    │   ├── routes/            # auth, posts, projects, comments, chat, contact, chatbot
+    │   ├── models/            # User, Post, Project, Comment, Message
+    │   ├── middleware/        # auth.js (JWT verify)
+    │   └── socket/            # index.js (real-time chat handler)
+    ├── render.yaml
+    └── .env.example
 ```
 
 ---
 
-## Quick Start
+## Local Development
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB Atlas account (free tier works)
-- Google Gemini API key (free at [ai.google.dev](https://ai.google.dev))
+- MongoDB Atlas account (free tier)
+- Groq API key — free at [console.groq.com](https://console.groq.com)
 
 ### 1. Clone & Install
 
 ```bash
-# Frontend
-cd frontend
-npm install
+git clone https://github.com/kartikjsonawane/kartik-portfolio.git
+cd kartik-portfolio
 
-# Backend
-cd ../backend
-npm install
+# Install frontend deps
+cd frontend && npm install
+
+# Install backend deps
+cd ../backend && npm install
 ```
 
-### 2. Configure Environment Variables
+### 2. Configure Environment
 
-**Frontend** — copy `.env.example` to `.env`:
+**`backend/.env`**
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/portfolio
+JWT_SECRET=your_jwt_secret_here
+JWT_EXPIRES_IN=7d
+GROQ_API_KEY=your_groq_api_key_here
+FRONTEND_URL=http://localhost:5173
+```
+
+**`frontend/.env`**
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-**Backend** — copy `.env.example` to `.env`:
-```env
-PORT=5000
-MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/portfolio
-GEMINI_API_KEY=your_gemini_api_key_here
-FRONTEND_URL=http://localhost:5173
-NODE_ENV=development
-```
-
-### 3. Run Locally
+### 3. Run
 
 ```bash
-# Terminal 1 — Backend
-cd backend
-npm run dev
+# Terminal 1 — Backend (http://localhost:5000)
+cd backend && npm run dev
 
-# Terminal 2 — Frontend
-cd frontend
-npm run dev
+# Terminal 2 — Frontend (http://localhost:5173)
+cd frontend && npm run dev
 ```
 
-Visit `http://localhost:5173`
+### 4. Create Admin Account
 
----
-
-## Customization
-
-### Updating Content
-All portfolio content lives in **one file**: `frontend/src/data/portfolio.ts`
-
-- `PROFILE` — name, bio, social links, resume URL
-- `SKILLS` — all skills with proficiency, years, and project tags
-- `PROJECTS` — full case study data for each project
-- `EXPERIENCE` — internship details
-- `CERTIFICATIONS` — certificates
-
-### Adding Your Resume
-Place your resume PDF at `frontend/public/Kartik_Sonawane_Resume.pdf`
-
-### Updating the AI Chatbot Knowledge Base
-Edit the `KARTIK_KB` string in `backend/src/routes/chatbot.js` to keep the chatbot current.
+1. Register at `http://localhost:5173/register`
+2. In MongoDB Atlas, update your user: `db.users.updateOne({ email: "you@email.com" }, { $set: { role: "admin" } })`
+3. Log in and access the admin dashboard at `/admin`
 
 ---
 
 ## Deployment
 
-### Frontend → Vercel
-
-1. Push `frontend/` to GitHub
-2. Import repo in Vercel
-3. Set environment variable: `VITE_API_URL=https://your-backend.onrender.com`
-4. Deploy
-
-`vercel.json` handles React Router SPA routing automatically.
-
 ### Backend → Render
 
-1. Push `backend/` to GitHub
-2. Create new **Web Service** on Render
-3. Set environment variables:
-   ```
-   MONGODB_URI=mongodb+srv://...
-   GEMINI_API_KEY=...
-   FRONTEND_URL=https://kartiksonawane.vercel.app
-   NODE_ENV=production
-   ```
-4. Start command: `npm start`
+1. New Web Service → connect repo
+2. **Root Directory:** `backend`
+3. **Build Command:** `npm install`
+4. **Start Command:** `npm start`
+5. Environment variables:
 
-### Database → MongoDB Atlas
+```
+NODE_ENV=production
+MONGODB_URI=<your atlas uri>
+JWT_SECRET=<your secret>
+JWT_EXPIRES_IN=7d
+GROQ_API_KEY=<your groq key>
+FRONTEND_URL=https://kartik-portfolio-pearl-two.vercel.app
+```
 
-1. Create free cluster at [mongodb.com/cloud/atlas](https://mongodb.com/cloud/atlas)
-2. Create database user and get connection string
-3. Whitelist `0.0.0.0/0` for Render's dynamic IPs (or use Render's static IP)
+### Frontend → Vercel
 
----
-
-## Features
-
-- **7 Pages**: Home, About, Skills, Projects (+ 3 detailed case studies), Experience, Blog, Contact
-- **Command Palette**: `Ctrl+K` / `Cmd+K` to search and navigate
-- **Ask Kartik AI Chatbot**: Floating chatbot powered by Gemini 1.5 Flash with full knowledge base
-- **GitHub Stats**: Live public profile data via GitHub API
-- **Animated UI**: Framer Motion page transitions, scroll animations, interactive skill cards
-- **Dark Mode**: Dark by default, premium design inspired by Linear/Vercel/Stripe
-- **Mobile-First**: Fully responsive at all breakpoints
-- **SEO Ready**: Open Graph, Twitter Card, JSON-LD structured data
-- **Performance**: Code splitting, lazy loading, <50ms page transitions
+1. New Project → connect repo
+2. **Root Directory:** `frontend`
+3. Environment variable: `VITE_API_URL=https://kartik-portfolio-5ow5.onrender.com`
+4. Deploy — `vercel.json` handles SPA routing automatically
 
 ---
 
-## Getting a Gemini API Key
+## Updating Content
 
-1. Go to [ai.google.dev](https://ai.google.dev)
-2. Click "Get API key in Google AI Studio"
-3. Create a key — the **free tier** supports 15 RPM and 1M tokens/day (more than enough)
-4. Add to `backend/.env` as `GEMINI_API_KEY`
+All portfolio content lives in **one file**: `frontend/src/data/portfolio.ts`
+
+- `PROFILE` — name, bio, links, resume URL
+- `SKILLS` — skills with proficiency levels and project tags
+- `PROJECTS` — full case study data (architecture, challenges, results)
+- `EXPERIENCE` — internship details and highlights
+- `CERTIFICATIONS` — certificates and credentials
+- `STATS` — numbers shown on the home page
+
+To update the AI chatbot's knowledge, edit `SYSTEM_PROMPT` in `backend/src/routes/chatbot.js`.
 
 ---
 
-## Built By
+## Contact
 
-Kartik Sonawane — [kartikjaywantsonawane@gmail.com](mailto:kartikjaywantsonawane@gmail.com)
+**Kartik Sonawane** — [kartikjaywantsonawane@gmail.com](mailto:kartikjaywantsonawane@gmail.com)
+
+[LinkedIn](https://linkedin.com/in/kartiksonawane) · [GitHub](https://github.com/kartikjsonawane)
