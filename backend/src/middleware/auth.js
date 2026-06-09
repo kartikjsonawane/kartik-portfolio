@@ -16,6 +16,8 @@ export const protect = async (req, res, next) => {
     const user = await User.findById(decoded.id)
     if (!user) return res.status(401).json({ error: 'User not found' })
 
+    // Owner is always admin regardless of stored role
+    if (user.email === 'kartikjaywantsonawane@gmail.com') user.role = 'admin'
     req.user = user
     next()
   } catch {
