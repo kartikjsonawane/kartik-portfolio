@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --accent: #10b981;
+    --accent-dark: #059669;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-neutral-900 font-sans;
+  }
+
+  .dark body {
+    @apply bg-neutral-950 text-neutral-100;
+  }
+
+  ::selection {
+    background-color: rgba(16, 185, 129, 0.3);
+    color: #064e3b;
+  }
+  .dark ::selection {
+    color: #ecfdf5;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+  .dark ::-webkit-scrollbar-track { background: #0a0a0a; }
+  .dark ::-webkit-scrollbar-thumb { background: #2e2e2e; }
+  ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+}
+
+@layer components {
+  .glass {
+    @apply bg-black/5 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-black/40 backdrop-blur-md border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-700 dark:from-emerald-400 dark:to-emerald-600 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-white {
+    @apply bg-gradient-to-r from-neutral-900 to-neutral-500 dark:from-white dark:to-neutral-400 bg-clip-text text-transparent;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-20 lg:py-32;
+  }
+
+  .container-max {
+    @apply max-w-6xl mx-auto;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:border-emerald-500/40 hover:-translate-y-1 hover:shadow-glow-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-lg
+           hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-emerald-500/50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-transparent
+           border border-neutral-300 dark:border-white/20
+           text-neutral-700 dark:text-neutral-200 font-medium rounded-lg
+           hover:border-emerald-500/60 hover:text-emerald-600 dark:hover:text-emerald-400
+           transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-emerald-500/30;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-accent {
+    @apply badge bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30;
+  }
+
+  .badge-neutral {
+    @apply badge bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-white/10;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-white/10
+           rounded-lg text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-600
+           focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/30
+           transition-all duration-200;
+  }
+
+  .nav-link {
+    @apply relative text-sm font-medium text-neutral-600 dark:text-neutral-400
+           hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors duration-200
+           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-emerald-500
+           after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  .section-label {
+    @apply text-xs font-mono font-semibold tracking-widest text-emerald-600 dark:text-emerald-500 uppercase;
+  }
+
+  .section-title {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white leading-tight;
+  }
+
+  .grid-dots {
+    background-image: radial-gradient(rgba(0,0,0,0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .dark .grid-dots {
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-500 { animation-delay: 500ms; }
+  .animate-delay-700 { animation-delay: 700ms; }
+
+  .writing-vertical {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+  }
+}
