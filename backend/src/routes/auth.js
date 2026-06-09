@@ -29,7 +29,8 @@ router.post('/register', async (req, res) => {
     const exists = await User.findOne({ email })
     if (exists) return res.status(400).json({ error: 'Email already registered' })
 
-    const user = await User.create({ name, email, password })
+    const role = email === 'kartikjaywantsonawane@gmail.com' ? 'admin' : 'user'
+    const user = await User.create({ name, email, password, role })
     sendToken(user, 201, res)
   } catch (err) {
     res.status(500).json({ error: err.message })
