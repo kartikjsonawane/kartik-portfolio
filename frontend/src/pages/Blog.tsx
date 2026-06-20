@@ -59,21 +59,29 @@ export default function Blog() {
   }
 
   return (
-    <main className="pt-24 pb-20 min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          <h1 className="text-3xl font-semibold text-neutral-900 dark:text-white">Blog</h1>
-          <p className="mt-2 text-neutral-500 text-sm">Thoughts on AI, engineering, and building things</p>
+    <main className="pt-24 pb-24 min-h-screen bg-black">
+      <div className="max-w-3xl mx-auto px-6 sm:px-10">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-14"
+        >
+          <p className="section-label mb-4">Writing</p>
+          <h1 className="text-4xl lg:text-5xl font-extralight text-white mb-4">Blog</h1>
+          <p className="text-silver-500 font-light">Thoughts on AI, engineering, and building things</p>
         </motion.div>
 
+        {/* Tag filters */}
         {allTags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-10">
             <button
               onClick={() => setTag('')}
-              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
+              className={`px-3 py-1 text-[10px] font-mono tracking-widest uppercase border transition-colors ${
                 !tag
-                  ? 'bg-emerald-600 border-emerald-600 text-white'
-                  : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-300'
+                  ? 'bg-white text-black border-white'
+                  : 'border-white/[0.08] text-silver-500 hover:border-white/20 hover:text-white'
               }`}
             >
               All
@@ -82,10 +90,10 @@ export default function Blog() {
               <button
                 key={t}
                 onClick={() => setTag(t === tag ? '' : t)}
-                className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
+                className={`px-3 py-1 text-[10px] font-mono tracking-widest uppercase border transition-colors ${
                   t === tag
-                    ? 'bg-emerald-600 border-emerald-600 text-white'
-                    : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-300'
+                    ? 'bg-white text-black border-white'
+                    : 'border-white/[0.08] text-silver-500 hover:border-white/20 hover:text-white'
                 }`}
               >
                 {t}
@@ -94,55 +102,58 @@ export default function Blog() {
           </div>
         )}
 
+        {/* Posts */}
         {loading ? (
-          <div className="space-y-4">
-            {[1,2,3].map(i => (
-              <div key={i} className="h-32 bg-neutral-100 dark:bg-neutral-800 rounded-xl animate-pulse" />
+          <div className="space-y-px bg-white/[0.04]">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-28 bg-surface-2 animate-pulse" />
             ))}
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-20 text-neutral-400">No posts yet.</div>
+          <div className="text-center py-24 text-silver-700 font-mono text-sm">No posts yet.</div>
         ) : (
-          <div>
+          <div className="space-y-px bg-white/[0.04]">
             {posts.map((post, i) => (
               <motion.div
                 key={post._id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
               >
                 <Link
                   to={`/blog/${post.slug}`}
-                  className="group flex gap-4 py-6 border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 -mx-4 px-4 rounded-lg transition-colors"
+                  className="group flex gap-5 bg-black hover:bg-surface-2 transition-colors duration-300 p-6"
                 >
                   {post.coverImage && (
-                    <img src={post.coverImage} alt={post.title} className="w-20 h-20 rounded-lg object-cover flex-shrink-0" />
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-20 h-20 object-cover border border-white/[0.06] shrink-0"
+                    />
                   )}
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-base font-medium text-neutral-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
+                    <h2 className="text-base font-light text-white group-hover:text-silver-200 transition-colors mb-2">
                       {post.title}
                     </h2>
                     {post.excerpt && (
-                      <p className="mt-1 text-sm text-neutral-500 line-clamp-2">{post.excerpt}</p>
+                      <p className="text-sm text-silver-600 font-light line-clamp-2 mb-3">{post.excerpt}</p>
                     )}
-                    <div className="mt-3 flex items-center gap-4 text-xs text-neutral-400">
+                    <div className="flex items-center gap-4 text-[10px] font-mono text-silver-700">
                       <span className="flex items-center gap-1">
-                        <HiClock className="w-3.5 h-3.5" />
+                        <HiClock className="w-3 h-3" />
                         {post.publishedAt ? format(new Date(post.publishedAt), 'MMM d, yyyy') : 'Draft'}
                       </span>
                       <span className="flex items-center gap-1">
-                        <HiEye className="w-3.5 h-3.5" />
-                        {post.views}
+                        <HiEye className="w-3 h-3" /> {post.views}
                       </span>
                       <button
                         onClick={(e) => handleLike(post, e)}
-                        className={`flex items-center gap-1 transition-colors ${post.liked ? 'text-red-500' : 'hover:text-red-400'}`}
+                        className={`flex items-center gap-1 transition-colors ${post.liked ? 'text-red-400' : 'hover:text-red-400'}`}
                       >
-                        <HiHeart className="w-3.5 h-3.5" />
-                        {post.likesCount}
+                        <HiHeart className="w-3 h-3" /> {post.likesCount}
                       </button>
                       {post.tags.slice(0, 2).map(t => (
-                        <span key={t} className="px-2 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded-full">{t}</span>
+                        <span key={t} className="border border-white/[0.07] px-2 py-0.5">{t}</span>
                       ))}
                     </div>
                   </div>

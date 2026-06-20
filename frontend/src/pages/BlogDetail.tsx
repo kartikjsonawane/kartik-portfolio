@@ -34,14 +34,10 @@ export default function BlogDetail() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [postRes, commentsRes] = await Promise.all([
-          api.get(`/api/posts/${slug}`),
-          api.get('/api/comments', { params: {} }),
-        ])
+        const postRes = await api.get(`/api/posts/${slug}`)
         setPost(postRes.data.post)
-        // Load comments for this post after we have post._id
         const postId = postRes.data.post._id
-        const cRes = await api.get('/api/comments', { params: { post: postId } })
+        const cRes   = await api.get('/api/comments', { params: { post: postId } })
         setComments(cRes.data.comments)
       } catch {
         toast.error('Failed to load post')
@@ -103,7 +99,7 @@ export default function BlogDetail() {
   if (loading) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border border-white/20 border-t-white animate-spin" />
       </div>
     )
   }
@@ -111,125 +107,136 @@ export default function BlogDetail() {
   if (!post) {
     return (
       <div className="min-h-screen pt-24 text-center">
-        <p className="text-neutral-500">Post not found.</p>
-        <Link to="/blog" className="text-emerald-600 hover:underline mt-4 inline-block">← Back to blog</Link>
+        <p className="text-silver-500 mb-4">Post not found.</p>
+        <Link to="/blog" className="text-[11px] font-mono tracking-widest uppercase text-white border-b border-white/20 hover:border-white transition-colors">
+          ← Back to Blog
+        </Link>
       </div>
     )
   }
 
   return (
-    <main className="pt-24 pb-20 min-h-screen">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+    <main className="pt-24 pb-24 min-h-screen bg-black">
+      <div className="max-w-3xl mx-auto px-6 sm:px-10">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-          <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 mb-8 transition-colors">
-            <HiArrowLeft className="w-4 h-4" />
-            Back to blog
+
+          <Link to="/blog"
+            className="inline-flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors mb-12"
+          >
+            <HiArrowLeft className="w-4 h-4" /> Back to Blog
           </Link>
 
           {post.coverImage && (
-            <img src={post.coverImage} alt={post.title} className="w-full h-60 object-cover rounded-2xl mb-8" />
+            <img src={post.coverImage} alt={post.title}
+              className="w-full h-56 object-cover mb-10 border border-white/[0.06]" />
           )}
 
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-5">
             {post.tags.map(t => (
-              <span key={t} className="px-2.5 py-0.5 text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-full">{t}</span>
+              <span key={t} className="px-2.5 py-0.5 border border-white/[0.08] text-silver-500 text-[10px] font-mono">
+                {t}
+              </span>
             ))}
           </div>
 
-          <h1 className="text-3xl font-semibold text-neutral-900 dark:text-white leading-tight">{post.title}</h1>
+          <h1 className="text-3xl lg:text-4xl font-extralight text-white leading-tight mb-5">
+            {post.title}
+          </h1>
 
-          <div className="flex items-center gap-4 mt-4 text-sm text-neutral-500">
+          <div className="flex items-center gap-5 mb-12 text-[11px] font-mono text-silver-600">
             <span>{post.author.name}</span>
             <span>·</span>
             <span>{format(new Date(post.publishedAt), 'MMMM d, yyyy')}</span>
-            <span className="flex items-center gap-1"><HiEye className="w-4 h-4" />{post.views}</span>
+            <span className="flex items-center gap-1"><HiEye className="w-3.5 h-3.5" /> {post.views}</span>
             <button
               onClick={handleLike}
-              className={`flex items-center gap-1 transition-colors ${post.liked ? 'text-red-500' : 'hover:text-red-400'}`}
+              className={`flex items-center gap-1 transition-colors ${post.liked ? 'text-red-400' : 'hover:text-red-400'}`}
             >
-              <HiHeart className="w-4 h-4" />
-              {post.likesCount}
+              <HiHeart className="w-3.5 h-3.5" /> {post.likesCount}
             </button>
           </div>
 
+          {/* Article body */}
           <div
-            className="mt-10 prose dark:prose-invert prose-sm max-w-none prose-headings:font-semibold prose-a:text-emerald-600"
+            className="prose-mercedes"
             dangerouslySetInnerHTML={{ __html: marked.parse(post.content) as string }}
           />
 
           {/* Comments */}
-          <div className="mt-16 border-t border-neutral-100 dark:border-neutral-800 pt-10">
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-6">
-              Comments ({comments.length})
+          <div className="mt-20 border-t border-white/[0.05] pt-12">
+            <h2 className="text-xl font-extralight text-white mb-8 tracking-wide">
+              Comments <span className="text-silver-600">({comments.length})</span>
             </h2>
 
-            {/* Comment Form */}
             {user ? (
-              <form onSubmit={handleComment} className="mb-8">
+              <form onSubmit={handleComment} className="mb-10">
                 {replyTo && (
-                  <div className="mb-2 flex items-center gap-2 text-sm text-neutral-500">
-                    <span>Replying to <strong>{replyTo.author.name}</strong></span>
-                    <button type="button" onClick={() => setReplyTo(null)} className="text-red-400 hover:text-red-500">✕</button>
+                  <div className="mb-3 flex items-center gap-2 text-[11px] font-mono text-silver-600">
+                    <span>Replying to <strong className="text-silver-300">{replyTo.author.name}</strong></span>
+                    <button type="button" onClick={() => setReplyTo(null)} className="text-red-400 hover:text-red-300 ml-2">✕</button>
                   </div>
                 )}
                 <textarea
                   value={commentText}
                   onChange={e => setCommentText(e.target.value)}
-                  placeholder="Write a comment…"
+                  placeholder="Write a comment..."
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-400 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none transition"
+                  className="input-field resize-none mb-3"
                 />
-                <div className="flex justify-end mt-2">
+                <div className="flex justify-end">
                   <button
                     type="submit"
                     disabled={submitting || !commentText.trim()}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition disabled:opacity-50"
+                    className="btn-primary disabled:opacity-50"
                   >
-                    {submitting ? 'Posting…' : 'Post comment'}
+                    {submitting ? 'Posting...' : 'Post Comment'}
                   </button>
                 </div>
               </form>
             ) : (
-              <p className="mb-8 text-sm text-neutral-500">
-                <Link to="/login" className="text-emerald-600 hover:underline">Sign in</Link> to leave a comment.
+              <p className="mb-8 text-sm font-light text-silver-600">
+                <Link to="/login" className="text-white border-b border-white/20 hover:border-white transition-colors">
+                  Sign in
+                </Link>{' '}to leave a comment.
               </p>
             )}
 
-            {/* Comment list */}
             <div className="space-y-6">
               {comments.map(c => (
-                <div key={c._id} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center flex-shrink-0 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                <div key={c._id} className="flex gap-4 py-4 border-b border-white/[0.05]">
+                  <div className="w-7 h-7 border border-white/10 flex items-center justify-center text-[10px] font-mono text-silver-500 shrink-0 mt-0.5">
                     {c.author.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm font-medium text-neutral-900 dark:text-white">{c.author.name}</span>
-                      <span className="text-xs text-neutral-400">{format(new Date(c.createdAt), 'MMM d, yyyy')}</span>
-                      {c.edited && <span className="text-xs text-neutral-400">(edited)</span>}
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-sm font-light text-white">{c.author.name}</span>
+                      <span className="text-[10px] font-mono text-silver-700">
+                        {format(new Date(c.createdAt), 'MMM d, yyyy')}
+                      </span>
+                      {c.edited && <span className="text-[10px] font-mono text-silver-700">(edited)</span>}
                     </div>
-                    <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">{c.content}</p>
-                    <div className="flex items-center gap-3 mt-2">
+                    <p className="text-sm font-light text-silver-400 leading-relaxed">{c.content}</p>
+                    <div className="flex items-center gap-4 mt-3">
                       <button
                         onClick={() => handleLikeComment(c)}
-                        className={`flex items-center gap-1 text-xs transition-colors ${c.liked ? 'text-red-500' : 'text-neutral-400 hover:text-red-400'}`}
+                        className={`flex items-center gap-1 text-[11px] font-mono transition-colors ${c.liked ? 'text-red-400' : 'text-silver-700 hover:text-red-400'}`}
                       >
-                        <HiHeart className="w-3.5 h-3.5" /> {c.likesCount}
+                        <HiHeart className="w-3 h-3" /> {c.likesCount}
                       </button>
                       {user && (
                         <button
                           onClick={() => setReplyTo(c)}
-                          className="flex items-center gap-1 text-xs text-neutral-400 hover:text-emerald-500 transition-colors"
+                          className="flex items-center gap-1 text-[11px] font-mono text-silver-700 hover:text-white transition-colors"
                         >
-                          <HiReply className="w-3.5 h-3.5" /> Reply
+                          <HiReply className="w-3 h-3" /> Reply
                         </button>
                       )}
                       {(user?._id === c.author._id || isAdmin) && (
                         <button
                           onClick={() => handleDeleteComment(c._id)}
-                          className="flex items-center gap-1 text-xs text-neutral-400 hover:text-red-500 transition-colors"
+                          className="flex items-center gap-1 text-[11px] font-mono text-silver-700 hover:text-red-400 transition-colors"
                         >
-                          <HiTrash className="w-3.5 h-3.5" />
+                          <HiTrash className="w-3 h-3" />
                         </button>
                       )}
                     </div>

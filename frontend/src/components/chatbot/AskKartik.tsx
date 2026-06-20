@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiMessageCircle, FiX, FiSend, FiMinimize2 } from 'react-icons/fi'
+import { FiX, FiSend, FiMinimize2 } from 'react-icons/fi'
 import { HiOutlineSparkles } from 'react-icons/hi'
 import axios from 'axios'
 

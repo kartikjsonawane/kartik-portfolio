@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import {
   HiPlus, HiPencil, HiTrash, HiEye, HiHeart,
-  HiDocumentText, HiCode, HiChatAlt2,
+  HiDocumentText, HiCode,
 } from 'react-icons/hi'
 import api from '@/services/api'
 import toast from 'react-hot-toast'

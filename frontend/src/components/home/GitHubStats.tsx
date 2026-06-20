@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { FiGithub, FiStar, FiGitCommit, FiUsers } from 'react-icons/fi'
+import { FiGithub, FiGitCommit, FiUsers } from 'react-icons/fi'
 import axios from 'axios'
 
 interface GitHubData {
