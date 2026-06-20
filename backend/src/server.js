@@ -20,6 +20,7 @@ import projectsRoutes  from './routes/projects.js'
 import commentsRoutes  from './routes/comments.js'
 import chatRoutes      from './routes/chat.js'
 import { initSocket }  from './socket/index.js'
+import { seedBlogs }  from './seed.js'
 
 const app    = express()
 const server = createServer(app)
@@ -88,6 +89,7 @@ async function start() {
         family: 4,  // Force IPv4 — fixes querySrv ECONNREFUSED on Windows
       })
       console.log('✅ MongoDB connected')
+      await seedBlogs()
     } else {
       console.warn('⚠️  MONGODB_URI not set — running without database')
     }
