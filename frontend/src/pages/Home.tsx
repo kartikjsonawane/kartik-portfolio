@@ -277,9 +277,9 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 1.2, ease: MB }}
-              className="hidden lg:flex justify-center items-center"
+              className="flex justify-center items-center order-first lg:order-last"
             >
-              <div className="relative w-[380px] h-[480px]">
+              <div className="relative w-[260px] h-[320px] sm:w-[320px] sm:h-[400px] lg:w-[380px] lg:h-[480px]">
                 {/* Subtle ambient glow behind */}
                 <div className="absolute inset-0 -z-10 rounded-sm blur-3xl opacity-20 bg-gradient-to-br from-white/10 to-transparent scale-110" />
 
