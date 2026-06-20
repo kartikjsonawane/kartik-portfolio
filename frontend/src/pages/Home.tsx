@@ -6,7 +6,7 @@ import {
 import { TypeAnimation } from 'react-type-animation'
 import { FiGithub, FiLinkedin, FiArrowRight, FiDownload, FiMail, FiExternalLink } from 'react-icons/fi'
 import { HiArrowDown } from 'react-icons/hi'
-import api from '@/services/api'
+import emailjs from '@emailjs/browser'
 import toast from 'react-hot-toast'
 import { PROFILE, PROJECTS, EXPERIENCE, STATS, CERTIFICATIONS } from '@/data/portfolio'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
@@ -117,7 +117,22 @@ export default function Home() {
     if (!form.name || !form.email || !form.message) return
     setSending(true)
     try {
-      await api.post('/api/contact', form)
+      const serviceId  = import.meta.env.VITE_EMAILJS_SERVICE_ID
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+      const publicKey  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      if (!serviceId || !templateId || !publicKey) {
+        // Fallback: open mailto if EmailJS not configured yet
+        window.open(`mailto:kartikjaywantsonawane@gmail.com?subject=Portfolio contact from ${form.name}&body=${encodeURIComponent(form.message)}`)
+        toast.success('Opening your email client...')
+        setForm({ name: '', email: '', message: '' })
+        return
+      }
+      await emailjs.send(serviceId, templateId, {
+        from_name:  form.name,
+        from_email: form.email,
+        message:    form.message,
+        to_email:   'kartikjaywantsonawane@gmail.com',
+      }, publicKey)
       toast.success('Message sent!')
       setForm({ name: '', email: '', message: '' })
     } catch {
@@ -670,20 +685,13 @@ export default function Home() {
                 variants={fadeUp}
                 type="submit"
                 disabled={sending}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="btn-primary w-full justify-center disabled:opacity-50"
+                className={`btn-primary w-full justify-center gap-3 ${sending ? 'opacity-60 pointer-events-none' : ''}`}
               >
                 {sending ? (
-                  <span className="flex items-center gap-2">
-                    <motion.span
-                      animate={{ rotate: 360 }}
-                      transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
-                      className="w-3.5 h-3.5 border border-black/40 border-t-black rounded-full inline-block"
-                    />
-                    Sending...
-                  </span>
-                ) : 'Send Message'}
+                  <span className="w-4 h-4 border border-white/30 border-t-white animate-spin rounded-full" />
+                ) : (
+                  <>Send Message <FiArrowRight className="w-4 h-4" /></>
+                )}
               </motion.button>
             </motion.form>
           </div>
