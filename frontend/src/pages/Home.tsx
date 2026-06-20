@@ -9,6 +9,7 @@ import { HiArrowDown } from 'react-icons/hi'
 import emailjs from '@emailjs/browser'
 import toast from 'react-hot-toast'
 import { PROFILE, PROJECTS, EXPERIENCE, STATS, CERTIFICATIONS } from '@/data/portfolio'
+import kartikPhoto from '@/assets/kartik.png'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
 import SplitReveal from '@/components/ui/SplitReveal'
 
@@ -284,18 +285,16 @@ export default function Home() {
 
                 {/* Photo */}
                 <img
-                  src="/kartik.jpg"
+                  src={kartikPhoto}
                   alt="Kartik Sonawane"
                   className="w-full h-full object-cover object-top rounded-sm"
                   style={{
-                    filter: 'brightness(0.52) contrast(1.08) saturate(0.7)',
-                    mixBlendMode: 'luminosity',
+                    filter: 'brightness(0.85) contrast(1.02) saturate(0.9)',
                   }}
                 />
 
-                {/* Gradient overlays for blending */}
-                <div className="absolute inset-0 rounded-sm bg-gradient-to-t from-black via-black/30 to-transparent" />
-                <div className="absolute inset-0 rounded-sm bg-gradient-to-r from-black/60 via-transparent to-black/20" />
+                {/* Subtle gradient fade at bottom only */}
+                <div className="absolute inset-0 rounded-sm bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                 {/* Thin border */}
                 <div className="absolute inset-0 rounded-sm border border-white/[0.06]" />
