@@ -96,6 +96,7 @@ const SKILL_GROUPS = [
 ]
 
 const TIMELINE = [
+  { year: '2026', title: 'Published Research — DP-HPO', desc: 'Zenodo · Dynamic programming for neural network HPO · 90.7% eval reduction' },
   { year: '2025', title: 'Open to Internships',         desc: 'Seeking SWE / AI / ML roles at top companies' },
   { year: '2024', title: 'CropMD — AI for Agriculture', desc: 'ResNet-50 plant disease detection · 96.3% accuracy' },
   { year: '2024', title: 'VisionTrack — Android + AI',  desc: 'Real-time YOLOv8 object detection on Android' },
@@ -103,6 +104,22 @@ const TIMELINE = [
   { year: '2023', title: 'DevConnect — Full-Stack',     desc: 'MERN developer social platform' },
   { year: '2022', title: 'B.Tech · AI & ML',            desc: 'Began specialisation in AI & Machine Learning' },
 ]
+
+const PAPER = {
+  title:    'DP-HPO: Approximate Dynamic Programming for Neural Network Hyperparameter Optimisation with Evaluation Caching',
+  venue:    'Zenodo · June 2026',
+  doi:      'https://doi.org/10.5281/zenodo.20760182',
+  github:   'https://github.com/kartikjsonawane/dp-hpo',
+  blog:     '/blog/dp-hpo-dynamic-programming-hyperparameter-optimisation',
+  abstract: 'Formulates HPO as a finite-horizon MDP and solves it via approximate dynamic programming with evaluation caching. Achieves within 0.5% of exhaustive grid search accuracy using 10 evaluations instead of 108 — a 90.7% reduction. Proves an optimality gap bound of (d−1)·ε via Bellman induction.',
+  tags:     ['Dynamic Programming', 'HPO', 'MDP', 'Neural Networks', 'Python'],
+  stats:    [
+    { value: '90.7%', label: 'Eval Reduction' },
+    { value: '10',    label: 'vs 108 Evaluations' },
+    { value: '0.5%',  label: 'Max Accuracy Gap' },
+    { value: '8',     label: 'Baselines Beaten' },
+  ],
+}
 
 export default function Home() {
   const [form, setForm]             = useState({ name: '', email: '', message: '' })
@@ -530,6 +547,71 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </Reveal>
+
+      {/* RESEARCH */}
+      <Reveal id="research">
+        <div className="container-max">
+          <SectionHeader label="Research" title="Published Work" />
+          <div className="border border-white/[0.07] p-8 lg:p-12 hover:border-white/20 transition-all duration-500 group">
+            {/* Top row */}
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-8">
+              <div className="flex-1">
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {PAPER.tags.map(t => (
+                    <span key={t} className="text-[10px] font-mono tracking-widest uppercase border border-white/[0.07] text-silver-600 px-2.5 py-1">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="font-display text-2xl lg:text-3xl text-white leading-snug mb-3">
+                  {PAPER.title}
+                </h3>
+                <p className="text-[11px] font-mono tracking-widest uppercase text-silver-600 mb-5">{PAPER.venue}</p>
+                <p className="text-silver-400 font-light text-sm leading-relaxed max-w-2xl">{PAPER.abstract}</p>
+              </div>
+
+              {/* Stats */}
+              <motion.div
+                variants={fadeUp}
+                className="grid grid-cols-2 gap-px bg-white/[0.05] border border-white/[0.07] shrink-0 lg:w-56"
+              >
+                {PAPER.stats.map(s => (
+                  <div key={s.label} className="bg-black p-4 text-center">
+                    <p className="font-display text-2xl text-white mb-1">{s.value}</p>
+                    <p className="text-[10px] font-mono tracking-widest uppercase text-silver-700">{s.label}</p>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Links */}
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-4 pt-6 border-t border-white/[0.06]">
+              <a
+                href={PAPER.doi}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary text-xs py-2.5 px-5"
+              >
+                <FiExternalLink className="w-3.5 h-3.5" /> Read Paper (DOI)
+              </a>
+              <a
+                href={PAPER.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary text-xs py-2.5 px-5"
+              >
+                <FiGithub className="w-3.5 h-3.5" /> View Code
+              </a>
+              <Link
+                to={PAPER.blog}
+                className="btn-secondary text-xs py-2.5 px-5"
+              >
+                <FiArrowRight className="w-3.5 h-3.5" /> Read Blog Post
+              </Link>
+            </motion.div>
           </div>
         </div>
       </Reveal>

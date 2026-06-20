@@ -406,6 +406,98 @@ Total monthly cost: **$0**.
 2. Write tests before shipping — debugged 3 production bugs that tests would have caught
 3. Add Sentry early — observability is not optional in production`,
   },
+  {
+    slug: 'dp-hpo-dynamic-programming-hyperparameter-optimisation',
+    title: 'DP-HPO: I Reduced Hyperparameter Search by 90.7% Using Dynamic Programming',
+    excerpt: 'How I formulated neural network HPO as a Markov Decision Process and proved an optimality gap bound — achieving grid-search accuracy with just 10 model evaluations instead of 108.',
+    coverImage: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80',
+    tags: ['Research', 'Machine Learning', 'Hyperparameter Optimisation', 'Dynamic Programming', 'Python'],
+    publishedAt: '2026-06-01',
+    readTime: 12,
+    content: `## The Problem with Hyperparameter Search
+
+Every time you train a neural network, you face a decision: how many layers? How many neurons? What learning rate? What activation function?
+
+For a modest search space of 3 hidden-layer sizes, 4 neuron counts, 3 learning rates, and 3 activations — exhaustive grid search requires 108 model trainings. Each one takes minutes to hours.
+
+The standard solutions (Random Search, Bayesian Optimisation, Hyperband, BOHB) all treat the configuration as a single joint object. My insight: treat it as a sequence of decisions.
+
+## HPO as a Markov Decision Process
+
+DP-HPO makes four sequential decisions, one per dimension:
+
+1. Commit the best number of hidden layers
+2. Given that, commit the best neuron count
+3. Given both, commit the best learning rate
+4. Given all three, commit the best activation function
+
+This is a finite-horizon MDP with state = committed hyperparameters, action = next dimension value, and terminal reward = validation accuracy.
+
+## The ADP Approximation and Evaluation Caching
+
+Each dimension i is evaluated by holding uncommitted dimensions at defaults:
+
+\`\`\`
+V_hat(s_i, a) = f(h_1*, ..., h_i*, a, DEFAULT_{i+2}, ..., DEFAULT_d)
+\`\`\`
+
+The evaluation cache is the key engineering insight. The DEFAULTS configuration appears in every dimension sweep but is trained only once:
+
+\`\`\`python
+committed = DEFAULTS.copy()
+memo = {}
+
+for i in importance_order:
+    best_val, best_acc = None, -1
+    for v in H[i]:
+        config = (*committed[:i], v, *DEFAULTS[i+1:])
+        if config not in memo:
+            memo[config] = train_and_eval(config)
+        if memo[config] > best_acc:
+            best_val, best_acc = v, memo[config]
+    committed[i] = best_val  # Bellman commit
+
+return committed, best_acc
+\`\`\`
+
+Result: exactly 1 + sum(|H_i| - 1) unique evaluations. For our space: 1 + (2+3+2+2) = 10 evaluations versus 108 for grid search. A 90.7% reduction.
+
+## Theorem 1: Optimality Gap Bound
+
+Define pairwise interaction strength eps = max|f(h) - f(h')| over pairs differing only on two dims.
+
+Theorem 1: f* - f_DP-HPO <= (d - 1) * eps
+
+Proven by induction on d. When eps = 0 (exact independence), DP-HPO is globally optimal.
+
+## Lemma 2: Importance-First Ordering
+
+Sort dimensions by decreasing marginal variance before committing. The most important dimension's value propagates to all subsequent decisions — so commit it first. Marginal variance is computed for free during DP-HPO's first sweep.
+
+## Results Across 4 Datasets, 25 Seeds
+
+| Method | Accuracy | Evaluations |
+|--------|----------|-------------|
+| Grid Search | 98.70% | 108 |
+| Bayesian Opt | 98.42% | 20 |
+| Random (k=10) | 98.14% | 10 |
+| DP-HPO | 98.28% | 10 |
+
+DP-HPO stays within 0.5% of exhaustive grid search across all four datasets (UCI Breast Cancer, MNIST, Fashion-MNIST, UCI Adult Income) while using 10.8x fewer evaluations. The accuracy gap is not statistically significant on UCI Breast Cancer (Wilcoxon, Bonferroni-corrected).
+
+## Key Lessons
+
+- The conditional independence assumption holds better than expected in standard MLP spaces
+- Evaluation caching is what makes the 90.7% reduction achievable in practice
+- Importance-first ordering consistently outperforms other orderings across 24 permutations
+- Always run power analysis before experiments — my initial n=5 seeds made statistical testing impossible
+
+## Paper and Code
+
+Published at Zenodo: doi.org/10.5281/zenodo.20760182
+
+Code: github.com/kartikjsonawane/dp-hpo`,
+  },
 ]
 
 export function getBlogBySlug(slug: string): BlogPost | undefined {
