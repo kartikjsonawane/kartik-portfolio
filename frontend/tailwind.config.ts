@@ -28,8 +28,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        sans:    ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Cormorant Garamond', 'Georgia', 'serif'],
+        mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       animation: {
         'fade-in':    'fadeIn 0.6s ease-out',

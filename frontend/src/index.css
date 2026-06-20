@@ -14,7 +14,9 @@
   body {
     background: #000000;
     color: #ffffff;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.01em;
   }
 
   ::selection { background: rgba(255,255,255,0.15); color: #fff; }
@@ -35,7 +37,9 @@
     @apply text-[10px] font-mono tracking-[0.3em] uppercase text-silver-500;
   }
   .section-title {
-    @apply text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight;
+    @apply text-4xl sm:text-5xl lg:text-6xl text-white leading-tight tracking-tight;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
   }
 
   /* Buttons — Mercedes style */
@@ -115,4 +119,16 @@
 @layer utilities {
   .text-silver { color: #888888; }
   .tracking-mercedes { letter-spacing: 0.2em; }
+
+  /* Cormorant Garamond display class — use on hero headings, section titles */
+  .font-display {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  .font-display-italic {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-style: italic;
+  }
 }

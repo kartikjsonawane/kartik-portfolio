@@ -76,7 +76,7 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
     <div className="mb-16">
       <motion.p variants={fadeUp} className="section-label mb-4">{label}</motion.p>
       <div className="flex items-end gap-6">
-        <SplitReveal text={title} className="text-4xl lg:text-5xl font-extralight text-white" as="h2" />
+        <SplitReveal text={title} className="font-display text-4xl lg:text-5xl text-white" as="h2" />
         <motion.div
           variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.9, ease: MB } } }}
           className="hidden lg:block h-px bg-white/[0.07] flex-1 mb-3 origin-left"
@@ -148,7 +148,7 @@ export default function Home() {
               initial={{ y: '105%', opacity: 0 }}
               animate={{ y: '0%', opacity: 1 }}
               transition={{ delay: 0.25, duration: 1, ease: MB }}
-              className="text-[clamp(3.5rem,11vw,9rem)] font-extralight tracking-[-0.03em] leading-[0.9] text-white"
+              className="font-display text-[clamp(3.5rem,11vw,9rem)] tracking-[-0.02em] leading-[0.9] text-white"
             >
               Kartik
             </motion.h1>
@@ -158,7 +158,7 @@ export default function Home() {
               initial={{ y: '105%', opacity: 0 }}
               animate={{ y: '0%', opacity: 1 }}
               transition={{ delay: 0.38, duration: 1, ease: MB }}
-              className="text-[clamp(3.5rem,11vw,9rem)] font-extralight tracking-[-0.03em] leading-[0.9] text-silver-500"
+              className="font-display text-[clamp(3.5rem,11vw,9rem)] tracking-[-0.02em] leading-[0.9] text-silver-500"
             >
               Sonawane
             </motion.h1>
@@ -274,7 +274,7 @@ export default function Home() {
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: MB } } }}
               className="text-center py-4 border-r border-white/[0.05] last:border-0"
             >
-              <p className="text-4xl font-extralight text-white mb-1.5">
+              <p className="font-display text-4xl text-white mb-1.5">
                 <AnimatedCounter to={value} suffix={suffix} duration={1800} />
               </p>
               <p className="text-[10px] font-mono tracking-[0.25em] uppercase text-silver-700">{label}</p>
@@ -433,7 +433,7 @@ export default function Home() {
                       <span className="font-mono text-[10px] text-silver-700 tracking-widest uppercase">{proj.category}</span>
                       <span className="font-mono text-[10px] text-silver-700 tracking-widest">{proj.year}</span>
                     </div>
-                    <h3 className="text-2xl lg:text-3xl font-extralight text-white mb-2 group-hover:text-silver-100 transition-colors duration-300">
+                    <h3 className="font-display text-2xl lg:text-3xl text-white mb-2 group-hover:text-silver-100 transition-colors duration-300">
                       {proj.title}
                     </h3>
                     <p className="text-silver-500 font-light italic mb-5 text-sm">{proj.tagline}</p>
