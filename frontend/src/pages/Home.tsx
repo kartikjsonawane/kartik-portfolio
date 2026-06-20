@@ -166,104 +166,146 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         <div className="container-max relative z-10">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6, ease: MB }}
-            className="section-label mb-10"
-          >
-            Portfolio · 2025
-          </motion.p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-          <div className="overflow-hidden mb-2">
-            <motion.h1
-              initial={{ y: '105%', opacity: 0 }}
-              animate={{ y: '0%', opacity: 1 }}
-              transition={{ delay: 0.25, duration: 1, ease: MB }}
-              className="font-display text-[clamp(3.5rem,11vw,9rem)] tracking-[-0.02em] leading-[0.9] text-white"
-            >
-              Kartik
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden mb-8">
-            <motion.h1
-              initial={{ y: '105%', opacity: 0 }}
-              animate={{ y: '0%', opacity: 1 }}
-              transition={{ delay: 0.38, duration: 1, ease: MB }}
-              className="font-display text-[clamp(3.5rem,11vw,9rem)] tracking-[-0.02em] leading-[0.9] text-silver-500"
-            >
-              Sonawane
-            </motion.h1>
-          </div>
-
-          {/* Horizontal rule — draws in */}
-          <motion.div
-            className="h-px bg-white/10 mb-8 origin-left"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.7, duration: 0.9, ease: MB }}
-          />
-
-          {/* Typing role */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.85, duration: 0.5 }}
-            className="h-7 mb-8"
-          >
-            <TypeAnimation
-              sequence={['AI & ML Engineer', 2400, 'Full-Stack Developer', 2400, 'Android Developer', 2400, 'API Engineer', 2400]}
-              wrapper="span"
-              cursor
-              repeat={Infinity}
-              className="text-sm font-mono tracking-[0.3em] uppercase text-silver-500"
-            />
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0, duration: 0.7, ease: MB }}
-            className="text-silver-400 text-base font-light leading-relaxed max-w-md mb-12"
-          >
-            {PROFILE.bio}
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.15, duration: 0.6, ease: MB }}
-            className="flex flex-wrap gap-4 mb-14"
-          >
-            <a href={PROFILE.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary group">
-              <FiDownload className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform duration-300" />
-              Resume
-            </a>
-            <button onClick={() => scrollTo('projects')} className="btn-secondary group">
-              View Work
-              <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-          </motion.div>
-
-          <div className="flex items-center gap-8">
-            {[
-              { icon: FiGithub,   href: PROFILE.github,            label: 'GitHub' },
-              { icon: FiLinkedin, href: PROFILE.linkedin,          label: 'LinkedIn' },
-              { icon: FiMail,     href: `mailto:${PROFILE.email}`, label: 'Email' },
-            ].map(({ icon: Icon, href, label }, i) => (
-              <motion.a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.35 + i * 0.08, duration: 0.5, ease: MB }}
-                className="flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-silver-700 hover:text-white transition-colors duration-300"
+            {/* ── Left: text ── */}
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6, ease: MB }}
+                className="section-label mb-10"
               >
-                <Icon className="w-4 h-4" /> {label}
-              </motion.a>
-            ))}
+                Portfolio · 2025
+              </motion.p>
+
+              <div className="overflow-hidden mb-2">
+                <motion.h1
+                  initial={{ y: '105%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 1 }}
+                  transition={{ delay: 0.25, duration: 1, ease: MB }}
+                  className="font-display text-[clamp(3.5rem,9vw,8rem)] tracking-[-0.02em] leading-[0.9] text-white"
+                >
+                  Kartik
+                </motion.h1>
+              </div>
+              <div className="overflow-hidden mb-8">
+                <motion.h1
+                  initial={{ y: '105%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 1 }}
+                  transition={{ delay: 0.38, duration: 1, ease: MB }}
+                  className="font-display text-[clamp(3.5rem,9vw,8rem)] tracking-[-0.02em] leading-[0.9] text-silver-500"
+                >
+                  Sonawane
+                </motion.h1>
+              </div>
+
+              {/* Horizontal rule — draws in */}
+              <motion.div
+                className="h-px bg-white/10 mb-8 origin-left"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.7, duration: 0.9, ease: MB }}
+              />
+
+              {/* Typing role */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.85, duration: 0.5 }}
+                className="h-7 mb-8"
+              >
+                <TypeAnimation
+                  sequence={['AI & ML Engineer', 2400, 'Full-Stack Developer', 2400, 'Android Developer', 2400, 'API Engineer', 2400]}
+                  wrapper="span"
+                  cursor
+                  repeat={Infinity}
+                  className="text-sm font-mono tracking-[0.3em] uppercase text-silver-500"
+                />
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.0, duration: 0.7, ease: MB }}
+                className="text-silver-400 text-base font-light leading-relaxed max-w-md mb-12"
+              >
+                {PROFILE.bio}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.15, duration: 0.6, ease: MB }}
+                className="flex flex-wrap gap-4 mb-14"
+              >
+                <a href={PROFILE.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary group">
+                  <FiDownload className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                  Resume
+                </a>
+                <button onClick={() => scrollTo('projects')} className="btn-secondary group">
+                  View Work
+                  <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </button>
+              </motion.div>
+
+              <div className="flex items-center gap-8">
+                {[
+                  { icon: FiGithub,   href: PROFILE.github,            label: 'GitHub' },
+                  { icon: FiLinkedin, href: PROFILE.linkedin,          label: 'LinkedIn' },
+                  { icon: FiMail,     href: `mailto:${PROFILE.email}`, label: 'Email' },
+                ].map(({ icon: Icon, href, label }, i) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.35 + i * 0.08, duration: 0.5, ease: MB }}
+                    className="flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-silver-700 hover:text-white transition-colors duration-300"
+                  >
+                    <Icon className="w-4 h-4" /> {label}
+                  </motion.a>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Right: photo ── */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 1.2, ease: MB }}
+              className="hidden lg:flex justify-center items-center"
+            >
+              <div className="relative w-[380px] h-[480px]">
+                {/* Subtle ambient glow behind */}
+                <div className="absolute inset-0 -z-10 rounded-sm blur-3xl opacity-20 bg-gradient-to-br from-white/10 to-transparent scale-110" />
+
+                {/* Photo */}
+                <img
+                  src="/kartik.jpg"
+                  alt="Kartik Sonawane"
+                  className="w-full h-full object-cover object-top rounded-sm"
+                  style={{
+                    filter: 'brightness(0.52) contrast(1.08) saturate(0.7)',
+                    mixBlendMode: 'luminosity',
+                  }}
+                />
+
+                {/* Gradient overlays for blending */}
+                <div className="absolute inset-0 rounded-sm bg-gradient-to-t from-black via-black/30 to-transparent" />
+                <div className="absolute inset-0 rounded-sm bg-gradient-to-r from-black/60 via-transparent to-black/20" />
+
+                {/* Thin border */}
+                <div className="absolute inset-0 rounded-sm border border-white/[0.06]" />
+
+                {/* Corner accent */}
+                <div className="absolute top-4 right-4 w-6 h-6 border-t border-r border-white/20" />
+                <div className="absolute bottom-4 left-4 w-6 h-6 border-b border-l border-white/20" />
+              </div>
+            </motion.div>
+
           </div>
         </div>
 
@@ -728,52 +770,52 @@ export default function Home() {
                         <FiExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-40 transition-opacity" />
                       </a>
                     ) : (
-                      <span className="text-silver-400 font-light text-sm">{item.value}</span>
+                      <span className="text-silver-300 font-light text-sm">{item.value}</span>
                     )}
                   </motion.div>
                 ))}
               </div>
             </div>
 
-            <motion.form variants={fadeUp} onSubmit={handleContact} className="space-y-8">
+            {/* Contact form */}
+            <motion.form
+              variants={fadeUp}
+              onSubmit={handleContact}
+              className="space-y-6"
+            >
               {[
-                { id: 'name',  label: 'Your Name',    type: 'text',  placeholder: 'Recruiter / Engineer' },
-                { id: 'email', label: 'Email Address', type: 'email', placeholder: 'you@company.com' },
-              ].map(field => (
-                <motion.div key={field.id} variants={fadeUp}>
-                  <label className="section-label block mb-3">{field.label}</label>
+                { key: 'name',    label: 'Name',    type: 'text',  placeholder: 'Your name' },
+                { key: 'email',   label: 'Email',   type: 'email', placeholder: 'your@email.com' },
+              ].map(({ key, label, type, placeholder }) => (
+                <div key={key}>
+                  <label className="block font-mono text-[10px] tracking-widest uppercase text-silver-700 mb-3">{label}</label>
                   <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={form[field.id as keyof typeof form]}
-                    onChange={e => setForm(prev => ({ ...prev, [field.id]: e.target.value }))}
-                    className="input-field"
-                    required
+                    type={type}
+                    placeholder={placeholder}
+                    value={form[key as keyof typeof form]}
+                    onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+                    className="w-full bg-transparent border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-silver-800 focus:outline-none focus:border-white/20 transition-colors duration-300 font-light"
                   />
-                </motion.div>
+                </div>
               ))}
-              <motion.div variants={fadeUp}>
-                <label className="section-label block mb-3">Message</label>
+              <div>
+                <label className="block font-mono text-[10px] tracking-widest uppercase text-silver-700 mb-3">Message</label>
                 <textarea
                   rows={5}
                   placeholder="Tell me about the role or project..."
                   value={form.message}
-                  onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
-                  className="input-field resize-none"
-                  required
+                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  className="w-full bg-transparent border border-white/[0.08] px-4 py-3 text-sm text-white placeholder:text-silver-800 focus:outline-none focus:border-white/20 transition-colors duration-300 font-light resize-none"
                 />
-              </motion.div>
+              </div>
               <motion.button
-                variants={fadeUp}
                 type="submit"
                 disabled={sending}
-                className={`btn-primary w-full justify-center gap-3 ${sending ? 'opacity-60 pointer-events-none' : ''}`}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="w-full btn-primary justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {sending ? (
-                  <span className="w-4 h-4 border border-white/30 border-t-white animate-spin rounded-full" />
-                ) : (
-                  <>Send Message <FiArrowRight className="w-4 h-4" /></>
-                )}
+                {sending ? 'Sending...' : 'Send Message'}
               </motion.button>
             </motion.form>
           </div>
