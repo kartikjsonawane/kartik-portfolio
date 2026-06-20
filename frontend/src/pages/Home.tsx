@@ -1,27 +1,33 @@
-import { useRef, useState, FormEvent } from 'react'
+import { useRef, useState, FormEvent, MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import {
+  motion, useInView, useMotionValue, useSpring, useTransform,
+} from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { FiGithub, FiLinkedin, FiArrowRight, FiDownload, FiMail, FiExternalLink } from 'react-icons/fi'
 import { HiArrowDown } from 'react-icons/hi'
 import api from '@/services/api'
 import toast from 'react-hot-toast'
 import { PROFILE, PROJECTS, EXPERIENCE, STATS, CERTIFICATIONS } from '@/data/portfolio'
+import AnimatedCounter from '@/components/ui/AnimatedCounter'
+import SplitReveal from '@/components/ui/SplitReveal'
 
-/* ─── Animation variants ─────────────────────────── */
+const MB: [number,number,number,number] = [0.22, 1, 0.36, 1]
+
 const fadeUp = {
-  hidden:  { opacity: 0, y: 36 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+  hidden:  { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: MB } },
 }
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } }
 
-function Reveal({ id, children, className = '' }: { id?: string; children: React.ReactNode; className?: string }) {
+function Reveal({ id, children, className = '' }: {
+  id?: string; children: React.ReactNode; className?: string
+}) {
   const ref    = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-8%' })
   return (
     <motion.section
-      id={id}
-      ref={ref}
+      id={id} ref={ref}
       variants={stagger}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
@@ -32,7 +38,54 @@ function Reveal({ id, children, className = '' }: { id?: string; children: React
   )
 }
 
-/* ─── Skill groups ──────────────────────────────── */
+function TiltCard({ children, className = '', strength = 5 }: {
+  children: React.ReactNode; className?: string; strength?: number
+}) {
+  const ref  = useRef<HTMLDivElement>(null)
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const cfg  = { stiffness: 180, damping: 18, mass: 0.5 }
+  const x    = useSpring(rawX, cfg)
+  const y    = useSpring(rawY, cfg)
+  const rotX = useTransform(y, [-1, 1], [strength, -strength])
+  const rotY = useTransform(x, [-1, 1], [-strength, strength])
+
+  const onMove = (e: MouseEvent<HTMLDivElement>) => {
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    rawX.set(((e.clientX - r.left) / r.width  - 0.5) * 2)
+    rawY.set(((e.clientY - r.top)  / r.height - 0.5) * 2)
+  }
+  const onLeave = () => { rawX.set(0); rawY.set(0) }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d', perspective: 1000 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function SectionHeader({ label, title }: { label: string; title: string }) {
+  return (
+    <div className="mb-16">
+      <motion.p variants={fadeUp} className="section-label mb-4">{label}</motion.p>
+      <div className="flex items-end gap-6">
+        <SplitReveal text={title} className="text-4xl lg:text-5xl font-extralight text-white" as="h2" />
+        <motion.div
+          variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.9, ease: MB } } }}
+          className="hidden lg:block h-px bg-white/[0.07] flex-1 mb-3 origin-left"
+        />
+      </div>
+    </div>
+  )
+}
+
 const SKILL_GROUPS = [
   { label: 'Languages',  items: ['Python', 'JavaScript', 'TypeScript', 'Java', 'Kotlin'] },
   { label: 'Frontend',   items: ['React', 'Tailwind CSS', 'Framer Motion', 'HTML / CSS'] },
@@ -42,7 +95,6 @@ const SKILL_GROUPS = [
   { label: 'Tools',      items: ['Git', 'Docker', 'AWS S3', 'Streamlit', 'Android SDK'] },
 ]
 
-/* ─── Timeline data ─────────────────────────────── */
 const TIMELINE = [
   { year: '2025', title: 'Open to Internships',         desc: 'Seeking SWE / AI / ML roles at top companies' },
   { year: '2024', title: 'CropMD — AI for Agriculture', desc: 'ResNet-50 plant disease detection · 96.3% accuracy' },
@@ -53,8 +105,9 @@ const TIMELINE = [
 ]
 
 export default function Home() {
-  const [form, setForm]       = useState({ name: '', email: '', message: '' })
-  const [sending, setSending] = useState(false)
+  const [form, setForm]             = useState({ name: '', email: '', message: '' })
+  const [sending, setSending]       = useState(false)
+  const [hoveredProj, setHoveredProj] = useState<string | null>(null)
 
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -68,193 +121,225 @@ export default function Home() {
       toast.success('Message sent!')
       setForm({ name: '', email: '', message: '' })
     } catch {
-      toast.error('Failed. Email me directly.')
-    } finally {
-      setSending(false)
-    }
+      toast.error('Failed — email me directly.')
+    } finally { setSending(false) }
   }
 
   return (
     <div className="bg-black text-white overflow-x-hidden">
 
-      {/* ══════════════════════════════════════════
-          HERO
-      ══════════════════════════════════════════ */}
+      {/* HERO */}
       <section className="relative min-h-screen flex flex-col justify-center section-padding">
-        <div className="absolute inset-0 grid-dots opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 grid-dots opacity-40 pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent pointer-events-none" />
 
         <div className="container-max relative z-10">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6, ease: MB }}
+            className="section-label mb-10"
+          >
+            Portfolio · 2025
+          </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.7 }}
-              className="section-label mb-8"
-            >
-              Portfolio · 2025
-            </motion.p>
-
+          <div className="overflow-hidden mb-2">
             <motion.h1
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[clamp(3.2rem,10vw,8rem)] font-extralight tracking-[-0.02em] leading-[0.93] text-white mb-6"
+              initial={{ y: '105%', opacity: 0 }}
+              animate={{ y: '0%', opacity: 1 }}
+              transition={{ delay: 0.25, duration: 1, ease: MB }}
+              className="text-[clamp(3.5rem,11vw,9rem)] font-extralight tracking-[-0.03em] leading-[0.9] text-white"
             >
-              Kartik<br />
-              <span className="text-silver-500">Sonawane</span>
+              Kartik
             </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.75, duration: 0.7 }}
-              className="h-7 mb-10"
+          </div>
+          <div className="overflow-hidden mb-8">
+            <motion.h1
+              initial={{ y: '105%', opacity: 0 }}
+              animate={{ y: '0%', opacity: 1 }}
+              transition={{ delay: 0.38, duration: 1, ease: MB }}
+              className="text-[clamp(3.5rem,11vw,9rem)] font-extralight tracking-[-0.03em] leading-[0.9] text-silver-500"
             >
-              <TypeAnimation
-                sequence={[
-                  'AI & ML Engineer', 2400,
-                  'Full-Stack Developer', 2400,
-                  'Android Developer', 2400,
-                  'API Engineer', 2400,
-                ]}
-                wrapper="span"
-                cursor
-                repeat={Infinity}
-                className="text-base font-mono tracking-[0.25em] uppercase text-silver-500"
-              />
-            </motion.div>
+              Sonawane
+            </motion.h1>
+          </div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.7 }}
-              className="text-silver-400 text-lg font-light leading-relaxed max-w-lg mb-12"
-            >
-              {PROFILE.bio}
-            </motion.p>
+          {/* Horizontal rule — draws in */}
+          <motion.div
+            className="h-px bg-white/10 mb-8 origin-left"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 0.7, duration: 0.9, ease: MB }}
+          />
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.05, duration: 0.7 }}
-              className="flex flex-wrap gap-4 mb-16"
-            >
-              <a href={PROFILE.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                <FiDownload className="w-4 h-4" /> Resume
-              </a>
-              <button onClick={() => scrollTo('projects')} className="btn-secondary">
-                View Work <FiArrowRight className="w-4 h-4" />
-              </button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.25, duration: 0.7 }}
-              className="flex items-center gap-8"
-            >
-              {[
-                { icon: FiGithub,   href: PROFILE.github,            label: 'GitHub' },
-                { icon: FiLinkedin, href: PROFILE.linkedin,          label: 'LinkedIn' },
-                { icon: FiMail,     href: `mailto:${PROFILE.email}`, label: 'Email' },
-              ].map(({ icon: Icon, href, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors duration-300"
-                >
-                  <Icon className="w-4 h-4" /> {label}
-                </a>
-              ))}
-            </motion.div>
+          {/* Typing role */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.85, duration: 0.5 }}
+            className="h-7 mb-8"
+          >
+            <TypeAnimation
+              sequence={['AI & ML Engineer', 2400, 'Full-Stack Developer', 2400, 'Android Developer', 2400, 'API Engineer', 2400]}
+              wrapper="span"
+              cursor
+              repeat={Infinity}
+              className="text-sm font-mono tracking-[0.3em] uppercase text-silver-500"
+            />
           </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0, duration: 0.7, ease: MB }}
+            className="text-silver-400 text-base font-light leading-relaxed max-w-md mb-12"
+          >
+            {PROFILE.bio}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.15, duration: 0.6, ease: MB }}
+            className="flex flex-wrap gap-4 mb-14"
+          >
+            <a href={PROFILE.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary group">
+              <FiDownload className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform duration-300" />
+              Resume
+            </a>
+            <button onClick={() => scrollTo('projects')} className="btn-secondary group">
+              View Work
+              <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
+          </motion.div>
+
+          <div className="flex items-center gap-8">
+            {[
+              { icon: FiGithub,   href: PROFILE.github,            label: 'GitHub' },
+              { icon: FiLinkedin, href: PROFILE.linkedin,          label: 'LinkedIn' },
+              { icon: FiMail,     href: `mailto:${PROFILE.email}`, label: 'Email' },
+            ].map(({ icon: Icon, href, label }, i) => (
+              <motion.a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.35 + i * 0.08, duration: 0.5, ease: MB }}
+                className="flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-silver-700 hover:text-white transition-colors duration-300"
+              >
+                <Icon className="w-4 h-4" /> {label}
+              </motion.a>
+            ))}
+          </div>
         </div>
 
-        {/* Scroll cue */}
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
+          transition={{ delay: 2.2, duration: 0.8 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] font-mono tracking-widest text-silver-800 uppercase">Scroll</span>
-          <motion.div animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
+          <motion.div
+            className="w-px h-12 bg-gradient-to-b from-transparent to-white/20"
+            initial={{ scaleY: 0, originY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ delay: 2.4, duration: 0.8, ease: MB }}
+          />
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}>
             <HiArrowDown className="w-4 h-4 text-silver-800" />
           </motion.div>
         </motion.div>
       </section>
 
-      {/* ══════════════════════════════════════════
-          STATS BAR
-      ══════════════════════════════════════════ */}
+      {/* STATS BAR */}
       <div className="border-y border-white/[0.05] bg-surface-1">
-        <div className="container-max py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <motion.div
+          className="container-max py-12 grid grid-cols-2 md:grid-cols-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+        >
           {[
-            { value: `${STATS.projectsBuilt}+`, label: 'Projects Built' },
-            { value: `${STATS.mlModels}+`,       label: 'ML Models' },
-            { value: `${STATS.techStack}+`,       label: 'Technologies' },
-            { value: `${STATS.githubRepos}+`,     label: 'GitHub Repos' },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-4xl font-extralight text-white mb-1.5">{value}</p>
-              <p className="text-[10px] font-mono tracking-[0.25em] uppercase text-silver-600">{label}</p>
-            </div>
+            { value: STATS.projectsBuilt, suffix: '+', label: 'Projects Built' },
+            { value: STATS.mlModels,       suffix: '+', label: 'ML Models' },
+            { value: STATS.techStack,       suffix: '+', label: 'Technologies' },
+            { value: STATS.githubRepos,     suffix: '+', label: 'GitHub Repos' },
+          ].map(({ value, suffix, label }) => (
+            <motion.div
+              key={label}
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: MB } } }}
+              className="text-center py-4 border-r border-white/[0.05] last:border-0"
+            >
+              <p className="text-4xl font-extralight text-white mb-1.5">
+                <AnimatedCounter to={value} suffix={suffix} duration={1800} />
+              </p>
+              <p className="text-[10px] font-mono tracking-[0.25em] uppercase text-silver-700">{label}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
-      {/* ══════════════════════════════════════════
-          ABOUT
-      ══════════════════════════════════════════ */}
+      {/* ABOUT */}
       <Reveal id="about">
         <div className="container-max">
+          <SectionHeader label="About" title="Engineering meets AI and product" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-            {/* Left */}
             <div>
-              <motion.p variants={fadeUp} className="section-label mb-5">About</motion.p>
-              <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-extralight text-white leading-tight mb-8">
-                Engineering at the<br />intersection of<br />
-                <span className="text-silver-500">AI and product</span>
-              </motion.h2>
-              <motion.p variants={fadeUp} className="text-silver-400 font-light leading-relaxed text-lg mb-5">
-                {PROFILE.bio}
+              <motion.p variants={fadeUp} className="text-silver-400 font-light leading-relaxed text-lg mb-5">{PROFILE.bio}</motion.p>
+              <motion.p variants={fadeUp} className="text-silver-500 font-light leading-relaxed mb-10">
+                Pursuing a B.Tech in Computer Science (AI &amp; ML). I build full-stack apps, train and deploy ML models,
+                and ship Android applications. Great engineering is invisible — it just works.
               </motion.p>
-              <motion.p variants={fadeUp} className="text-silver-500 font-light leading-relaxed">
-                Pursuing a B.Tech in Computer Science (AI & ML). I build full-stack applications,
-                train and deploy ML models, and ship Android apps. Great engineering is invisible — it just works.
-              </motion.p>
-
-              <motion.div variants={fadeUp} className="mt-10">
+              <motion.div variants={fadeUp}>
                 <p className="section-label mb-5">Certifications</p>
                 <div className="space-y-0">
-                  {CERTIFICATIONS.map(c => (
-                    <div key={c.title} className="flex items-start gap-3 py-3 border-b border-white/[0.05] last:border-0">
-                      <span className="text-lg mt-0.5">{c.icon}</span>
+                  {CERTIFICATIONS.map((c, i) => (
+                    <motion.div
+                      key={c.title}
+                      initial={{ opacity: 0, x: -16 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08, duration: 0.6, ease: MB }}
+                      className="flex items-start gap-3 py-3 border-b border-white/[0.05] last:border-0 group"
+                    >
+                      <span className="text-lg mt-0.5 group-hover:scale-110 transition-transform duration-300">{c.icon}</span>
                       <div>
                         <p className="text-silver-200 font-light text-sm">{c.title}</p>
                         <p className="text-silver-600 text-xs font-mono">{c.issuer} · {c.year}</p>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
             </div>
 
-            {/* Timeline */}
             <div>
               <motion.p variants={fadeUp} className="section-label mb-8">Timeline</motion.p>
-              <div className="space-y-0">
+              <div className="space-y-0 relative">
+                <motion.div
+                  className="absolute left-[3.25rem] top-0 bottom-0 w-px bg-white/[0.05] origin-top"
+                  initial={{ scaleY: 0 }}
+                  whileInView={{ scaleY: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.4, ease: MB }}
+                />
                 {TIMELINE.map((item, i) => (
                   <motion.div
                     key={i}
-                    variants={fadeUp}
-                    className="flex gap-6 pb-7 border-b border-white/[0.05] last:border-0 last:pb-0"
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.6, ease: MB }}
+                    className="flex gap-6 pb-7 border-b border-white/[0.05] last:border-0 last:pb-0 group"
                   >
-                    <span className="font-mono text-[10px] text-silver-700 tracking-widest pt-1 w-10 shrink-0">
-                      {item.year}
-                    </span>
+                    <span className="font-mono text-[10px] text-silver-700 tracking-widest pt-1 w-10 shrink-0">{item.year}</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-silver-800 mt-1.5 shrink-0 group-hover:bg-white transition-colors duration-300 relative z-10" />
                     <div>
-                      <p className="text-white font-light mb-1">{item.title}</p>
+                      <p className="text-white font-light mb-1 group-hover:text-silver-200 transition-colors">{item.title}</p>
                       <p className="text-silver-600 text-sm font-light">{item.desc}</p>
                     </div>
                   </motion.div>
@@ -265,114 +350,168 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* ══════════════════════════════════════════
-          SKILLS
-      ══════════════════════════════════════════ */}
+      {/* SKILLS */}
       <Reveal id="skills" className="bg-surface-1">
         <div className="container-max">
-          <motion.p variants={fadeUp} className="section-label mb-5">Expertise</motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-extralight text-white mb-16">
-            Skills & Technologies
-          </motion.h2>
-
+          <SectionHeader label="Expertise" title="Skills and Technologies" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.04]">
-            {SKILL_GROUPS.map((group) => (
-              <motion.div
-                key={group.label}
-                variants={fadeUp}
-                className="bg-surface-1 p-8 hover:bg-surface-2 transition-colors duration-500"
-              >
-                <p className="section-label mb-6">{group.label}</p>
-                <div className="flex flex-wrap gap-2">
-                  {group.items.map(skill => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 border border-white/[0.07] text-silver-400 text-[11px] font-mono
-                                 hover:border-white/20 hover:text-white transition-all duration-300 cursor-default"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
+            {SKILL_GROUPS.map((group, gi) => (
+              <TiltCard key={group.label} strength={3} className="bg-surface-1">
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: gi * 0.07, duration: 0.7, ease: MB }}
+                  className="p-8 h-full hover:bg-surface-2 transition-colors duration-500"
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <p className="section-label">{group.label}</p>
+                    <motion.div
+                      className="h-px bg-white/10 flex-1 origin-left"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: gi * 0.07 + 0.3, duration: 0.7, ease: MB }}
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((skill, si) => (
+                      <motion.span
+                        key={skill}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: gi * 0.04 + si * 0.04, duration: 0.4, ease: MB }}
+                        whileHover={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', y: -1 }}
+                        className="px-3 py-1 border border-white/[0.07] text-silver-400 text-[11px] font-mono cursor-default"
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </div>
+                </motion.div>
+              </TiltCard>
             ))}
           </div>
         </div>
       </Reveal>
 
-      {/* ══════════════════════════════════════════
-          PROJECTS
-      ══════════════════════════════════════════ */}
+      {/* PROJECTS */}
       <Reveal id="projects">
         <div className="container-max">
-          <motion.p variants={fadeUp} className="section-label mb-5">Selected Work</motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-extralight text-white mb-16">
-            Projects
-          </motion.h2>
-
+          <SectionHeader label="Selected Work" title="Projects" />
           <div className="space-y-px bg-white/[0.04]">
             {PROJECTS.map((proj, i) => (
               <motion.div
                 key={proj.slug}
-                variants={fadeUp}
-                className="group bg-black hover:bg-surface-2 transition-all duration-500 p-8 lg:p-12"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.8, ease: MB }}
+                onMouseEnter={() => setHoveredProj(proj.slug)}
+                onMouseLeave={() => setHoveredProj(null)}
+                className="relative group bg-black hover:bg-surface-2 transition-all duration-500 p-8 lg:p-12"
               >
+                {/* Left border draws down on hover */}
+                <motion.div
+                  className="absolute left-0 top-0 bottom-0 w-px bg-white origin-top"
+                  initial={{ scaleY: 0 }}
+                  animate={{ scaleY: hoveredProj === proj.slug ? 1 : 0 }}
+                  transition={{ duration: 0.4, ease: MB }}
+                />
+
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
-                  {/* Left */}
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-4">
-                      <span className="font-mono text-[10px] text-silver-700 tracking-widest">0{i + 1}</span>
+                      <motion.span
+                        className="font-mono text-[10px] tracking-widest"
+                        animate={{ color: hoveredProj === proj.slug ? '#888888' : '#444444' }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        0{i + 1}
+                      </motion.span>
                       <span className="font-mono text-[10px] text-silver-700 tracking-widest uppercase">{proj.category}</span>
                       <span className="font-mono text-[10px] text-silver-700 tracking-widest">{proj.year}</span>
                     </div>
-                    <h3 className="text-2xl lg:text-3xl font-extralight text-white mb-2 group-hover:text-silver-100 transition-colors">
+                    <h3 className="text-2xl lg:text-3xl font-extralight text-white mb-2 group-hover:text-silver-100 transition-colors duration-300">
                       {proj.title}
                     </h3>
                     <p className="text-silver-500 font-light italic mb-5 text-sm">{proj.tagline}</p>
-                    <p className="text-silver-400 font-light leading-relaxed max-w-lg mb-6 text-sm">
-                      {proj.description}
-                    </p>
+                    <p className="text-silver-400 font-light leading-relaxed max-w-lg mb-6 text-sm">{proj.description}</p>
                     <div className="flex flex-wrap gap-2 mb-8">
-                      {proj.tags.map(tag => (
-                        <span key={tag} className="px-2.5 py-0.5 border border-white/[0.07] text-silver-600 text-[10px] font-mono">
+                      {proj.tags.map((tag, ti) => (
+                        <motion.span
+                          key={tag}
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.04 + ti * 0.03, duration: 0.4 }}
+                          className="px-2.5 py-0.5 border border-white/[0.07] text-silver-600 text-[10px] font-mono"
+                        >
                           {tag}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
                     <div className="flex items-center gap-6">
-                      <Link to={`/projects/${proj.slug}`}
-                        className="text-[11px] font-mono tracking-widest uppercase text-white border-b border-white/20 pb-px hover:border-white transition-colors">
-                        Case Study →
+                      <Link
+                        to={`/projects/${proj.slug}`}
+                        className="group/link text-[11px] font-mono tracking-widest uppercase text-white flex items-center gap-1.5"
+                      >
+                        <span className="border-b border-white/20 pb-px group-hover/link:border-white transition-colors">Case Study</span>
+                        <motion.span
+                          animate={{ x: hoveredProj === proj.slug ? 3 : 0 }}
+                          transition={{ duration: 0.3, ease: MB }}
+                        >
+                          &rarr;
+                        </motion.span>
                       </Link>
-                      <a href={proj.github} target="_blank" rel="noopener noreferrer"
-                        className="text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors flex items-center gap-1.5">
+                      <a
+                        href={proj.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors flex items-center gap-1.5"
+                      >
                         <FiGithub className="w-3.5 h-3.5" /> GitHub
                       </a>
                       {proj.demo && (
-                        <a href={proj.demo} target="_blank" rel="noopener noreferrer"
-                          className="text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors flex items-center gap-1.5">
+                        <a
+                          href={proj.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] font-mono tracking-widest uppercase text-silver-600 hover:text-white transition-colors flex items-center gap-1.5"
+                        >
                           <FiExternalLink className="w-3.5 h-3.5" /> Live
                         </a>
                       )}
                     </div>
                   </div>
 
-                  {/* Right — architecture + results */}
-                  <div className="lg:w-64 shrink-0">
+                  <motion.div
+                    className="lg:w-64 shrink-0"
+                    animate={{ opacity: hoveredProj === proj.slug ? 1 : 0.45 }}
+                    transition={{ duration: 0.4 }}
+                  >
                     <p className="section-label mb-4">Architecture</p>
                     <div className="space-y-2.5 mb-6">
-                      {proj.architecture.map(layer => (
-                        <div key={layer.layer} className="flex items-start gap-3 border-b border-white/[0.04] pb-2.5 last:border-0">
+                      {proj.architecture.map((layer, li) => (
+                        <motion.div
+                          key={layer.layer}
+                          initial={{ opacity: 0, x: 12 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: li * 0.06, duration: 0.5, ease: MB }}
+                          className="flex items-start gap-3 border-b border-white/[0.04] pb-2.5 last:border-0"
+                        >
                           <span className="text-silver-700 font-mono text-[10px] w-16 shrink-0 pt-px">{layer.layer}</span>
                           <span className="text-silver-400 font-light text-xs leading-snug">{layer.tech}</span>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                     <p className="section-label mb-3">Results</p>
                     {proj.results.slice(0, 3).map((r, j) => (
                       <p key={j} className="text-silver-500 text-xs font-light mb-1.5">· {r}</p>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             ))}
@@ -380,46 +519,66 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* ══════════════════════════════════════════
-          EXPERIENCE
-      ══════════════════════════════════════════ */}
+      {/* EXPERIENCE */}
       <Reveal id="experience" className="bg-surface-1">
         <div className="container-max">
-          <motion.p variants={fadeUp} className="section-label mb-5">Experience</motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-extralight text-white mb-16">
-            Work History
-          </motion.h2>
-
+          <SectionHeader label="Experience" title="Work History" />
           <div className="border-t border-white/[0.05]">
             {EXPERIENCE.map((exp, i) => (
               <motion.div
                 key={i}
-                variants={fadeUp}
-                className="py-10 border-b border-white/[0.05] grid grid-cols-1 lg:grid-cols-3 gap-8"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.8, ease: MB }}
+                className="py-10 border-b border-white/[0.05] grid grid-cols-1 lg:grid-cols-3 gap-8 group"
               >
                 <div>
                   <p className="font-mono text-[10px] text-silver-700 tracking-widest mb-3 uppercase">
                     {exp.year} · {exp.duration} · {exp.location}
                   </p>
-                  <h3 className="text-white font-light text-xl mb-1">{exp.role}</h3>
+                  <h3 className="text-white font-light text-xl mb-1 group-hover:text-silver-200 transition-colors">{exp.role}</h3>
                   <p className="text-silver-500 font-light text-sm mb-4">{exp.company}</p>
-                  <p className="text-[10px] font-mono tracking-widest uppercase text-silver-700">{exp.impact}</p>
+                  <div className="inline-block">
+                    <p className="text-[10px] font-mono tracking-widest uppercase text-silver-700">{exp.impact}</p>
+                    <motion.div
+                      className="h-px bg-white/10 mt-1 origin-left"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.4, duration: 0.7, ease: MB }}
+                    />
+                  </div>
                 </div>
                 <div className="lg:col-span-2">
                   <p className="text-silver-400 font-light text-sm leading-relaxed mb-6">{exp.description}</p>
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2.5 mb-6">
                     {exp.highlights.map((h, j) => (
-                      <div key={j} className="flex items-start gap-3 text-sm">
+                      <motion.div
+                        key={j}
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: j * 0.06, duration: 0.5, ease: MB }}
+                        className="flex items-start gap-3 text-sm"
+                      >
                         <span className="w-px h-4 bg-white/15 mt-1.5 shrink-0" />
                         <span className="text-silver-400 font-light">{h}</span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {exp.stack.map(t => (
-                      <span key={t} className="px-2.5 py-0.5 border border-white/[0.07] text-silver-600 text-[10px] font-mono">
+                    {exp.stack.map((t, ti) => (
+                      <motion.span
+                        key={t}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: ti * 0.04, duration: 0.4 }}
+                        className="px-2.5 py-0.5 border border-white/[0.07] text-silver-600 text-[10px] font-mono hover:border-white/20 hover:text-white transition-all duration-200"
+                      >
                         {t}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
                 </div>
@@ -429,54 +588,62 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* ══════════════════════════════════════════
-          CONTACT
-      ══════════════════════════════════════════ */}
+      {/* CONTACT */}
       <Reveal id="contact">
         <div className="container-max">
+          <SectionHeader label="Contact" title="Let's build something together" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-            {/* Left */}
             <div>
-              <motion.p variants={fadeUp} className="section-label mb-5">Contact</motion.p>
-              <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-extralight text-white leading-tight mb-6">
-                Let's build<br />
-                <span className="text-silver-500">something together</span>
-              </motion.h2>
               <motion.p variants={fadeUp} className="text-silver-400 font-light leading-relaxed mb-12 text-sm">
-                I'm actively looking for internship opportunities in software engineering,
-                AI/ML, and full-stack development. Open to relocation and remote roles.
+                Looking for internship opportunities in SWE, AI/ML, and full-stack. Open to relocation and remote.
               </motion.p>
-              <motion.div variants={fadeUp} className="space-y-0">
+              <div className="space-y-0">
                 {[
                   { label: 'Email',    value: PROFILE.email,          href: `mailto:${PROFILE.email}` },
                   { label: 'LinkedIn', value: 'kartikjsonawane',      href: PROFILE.linkedin },
                   { label: 'GitHub',   value: PROFILE.githubUsername, href: PROFILE.github },
                   { label: 'Location', value: PROFILE.location,       href: null },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center gap-4 py-4 border-b border-white/[0.05]">
-                    <span className="font-mono text-[10px] tracking-widest uppercase text-silver-700 w-16 shrink-0">
-                      {item.label}
-                    </span>
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08, duration: 0.5, ease: MB }}
+                    className="flex items-center gap-4 py-4 border-b border-white/[0.05] group"
+                  >
+                    <span className="font-mono text-[10px] tracking-widest uppercase text-silver-700 w-16 shrink-0">{item.label}</span>
+                    <motion.div
+                      className="h-px bg-white/10"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: '16px' }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08 + 0.3, duration: 0.5, ease: MB }}
+                    />
                     {item.href ? (
-                      <a href={item.href} target="_blank" rel="noopener noreferrer"
-                        className="text-silver-300 hover:text-white transition-colors font-light text-sm flex items-center gap-1.5">
-                        {item.value} <FiExternalLink className="w-3 h-3 opacity-40" />
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-silver-300 hover:text-white transition-colors duration-300 font-light text-sm flex items-center gap-1.5"
+                      >
+                        {item.value}
+                        <FiExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-40 transition-opacity" />
                       </a>
                     ) : (
                       <span className="text-silver-400 font-light text-sm">{item.value}</span>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
-            {/* Form */}
             <motion.form variants={fadeUp} onSubmit={handleContact} className="space-y-8">
               {[
                 { id: 'name',  label: 'Your Name',    type: 'text',  placeholder: 'Recruiter / Engineer' },
                 { id: 'email', label: 'Email Address', type: 'email', placeholder: 'you@company.com' },
               ].map(field => (
-                <div key={field.id}>
+                <motion.div key={field.id} variants={fadeUp}>
                   <label className="section-label block mb-3">{field.label}</label>
                   <input
                     type={field.type}
@@ -486,9 +653,9 @@ export default function Home() {
                     className="input-field"
                     required
                   />
-                </div>
+                </motion.div>
               ))}
-              <div>
+              <motion.div variants={fadeUp}>
                 <label className="section-label block mb-3">Message</label>
                 <textarea
                   rows={5}
@@ -498,14 +665,26 @@ export default function Home() {
                   className="input-field resize-none"
                   required
                 />
-              </div>
-              <button
+              </motion.div>
+              <motion.button
+                variants={fadeUp}
                 type="submit"
                 disabled={sending}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 className="btn-primary w-full justify-center disabled:opacity-50"
               >
-                {sending ? 'Sending...' : 'Send Message'}
-              </button>
+                {sending ? (
+                  <span className="flex items-center gap-2">
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 0.7, ease: 'linear' }}
+                      className="w-3.5 h-3.5 border border-black/40 border-t-black rounded-full inline-block"
+                    />
+                    Sending...
+                  </span>
+                ) : 'Send Message'}
+              </motion.button>
             </motion.form>
           </div>
         </div>
